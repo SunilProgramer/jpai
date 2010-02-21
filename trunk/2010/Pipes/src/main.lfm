@@ -1,74 +1,68 @@
 object frmMain: TfrmMain
-  Left = 0
-  Top = 0
+  Left = 616
+  Height = 718
+  Top = 238
+  Width = 851
   Caption = 'frmMain'
   ClientHeight = 718
   ClientWidth = 851
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 13
+  LCLVersion = '0.9.28.2'
   object pbMain: TPaintBox
     Left = 0
+    Height = 629
     Top = 89
     Width = 851
-    Height = 629
     Align = alClient
     OnMouseDown = pbMainMouseDown
     OnMouseMove = pbMainMouseMove
     OnMouseUp = pbMainMouseUp
     OnPaint = pbMainPaint
-    ExplicitLeft = 328
-    ExplicitTop = 312
-    ExplicitWidth = 105
-    ExplicitHeight = 105
   end
   object pTools: TPanel
     Left = 0
+    Height = 89
     Top = 0
     Width = 851
-    Height = 89
     Align = alTop
     Caption = 'pTools'
+    ClientHeight = 89
+    ClientWidth = 851
     TabOrder = 0
+    OnClick = pToolsClick
     object lTurn: TLabel
       Left = 376
+      Height = 14
       Top = 8
-      Width = 62
-      Height = 13
+      Width = 63
       Caption = 'Player 1 turn'
+      ParentColor = False
     end
     object seW: TSpinEdit
       Left = 8
+      Height = 21
       Top = 8
       Width = 121
-      Height = 22
-      MaxValue = 100
       MinValue = 1
       TabOrder = 0
       Value = 10
     end
     object seH: TSpinEdit
       Left = 8
+      Height = 21
       Top = 36
       Width = 121
-      Height = 22
-      MaxValue = 100
       MinValue = 1
       TabOrder = 1
       Value = 10
     end
     object sePC: TSpinEdit
       Left = 144
+      Height = 21
       Top = 8
       Width = 121
-      Height = 22
       MaxValue = 6
       MinValue = 1
       TabOrder = 2
@@ -76,40 +70,40 @@ object frmMain: TfrmMain
     end
     object brnStart: TButton
       Left = 280
+      Height = 25
       Top = 6
       Width = 75
-      Height = 25
       Caption = 'Start'
-      TabOrder = 3
       OnClick = brnStartClick
+      TabOrder = 3
     end
     object lbScores: TListBox
       Left = 528
+      Height = 87
       Top = 1
       Width = 322
-      Height = 87
       Align = alRight
-      ItemHeight = 13
+      ItemHeight = 0
       TabOrder = 4
     end
     object cbEdit: TCheckBox
       Left = 144
-      Top = 36
-      Width = 97
       Height = 17
+      Top = 36
+      Width = 38
       Caption = 'Edit'
       TabOrder = 5
     end
     object tbCellsize: TTrackBar
       Left = 144
+      Height = 42
       Top = 59
       Width = 378
-      Height = 42
       Max = 64
       Min = 8
+      OnChange = tbCellsizeChange
       Position = 8
       TabOrder = 6
-      OnChange = tbCellsizeChange
     end
   end
 end

@@ -1,10 +1,11 @@
 unit main;
 
+{$mode objfpc}{$H+}
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, Spin, ComCtrls, math;
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs, Messages,  Variants,
+  ExtCtrls, StdCtrls, Spin, ComCtrls, math;
 
 const
   kindcount: integer = 12;
@@ -13,6 +14,9 @@ const
   //cellsize: integer = 64;
   //pipesize: integer = 8;
 type
+
+  { TfrmMain }
+
   TfrmMain = class(TForm)
     pTools: TPanel;
     pbMain: TPaintBox;
@@ -31,6 +35,7 @@ type
       Y: Integer);
     procedure pbMainMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure pToolsClick(Sender: TObject);
     procedure tbCellsizeChange(Sender: TObject);
     procedure pbMainMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -53,7 +58,7 @@ type
 
     procedure PaintRegion(x, y: Integer);
     procedure RePaintRegion(x, y: Integer);
-    procedure Check(x, y, z: Integer);
+    procedure Check( x, y, z: Integer);
     procedure Count();
   end;
 
@@ -62,7 +67,10 @@ var
 
 implementation
 
-{$R *.dfm}
+function RGB(r, g, b: Byte): TColor;
+begin
+  Result := (r or (g shl 8) or (b shl 16));
+end;
 
 procedure TfrmMain.brnStartClick(Sender: TObject);
 var
@@ -115,7 +123,7 @@ begin
     Check(x,y+1,2);
 end;
 
-procedure TfrmMain.Count;
+procedure TfrmMain.Count();
 var
   x: Integer;
   y: Integer;
@@ -374,6 +382,11 @@ begin
 //  PaintRegion(x, y);
 end;
 
+procedure TfrmMain.pToolsClick(Sender: TObject);
+begin
+
+end;
+
 procedure TfrmMain.pbMainPaint(Sender: TObject);
 var
   x: Integer;
@@ -403,5 +416,9 @@ procedure TfrmMain.tbCellsizeChange(Sender: TObject);
 begin
   pbMain.Repaint;
 end;
+
+initialization
+  {$I main.lrs}
+
 
 end.
