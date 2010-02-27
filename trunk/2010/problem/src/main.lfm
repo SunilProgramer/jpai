@@ -1,0 +1,22 @@
+object frmMain: TfrmMain
+  Left = 635
+  Height = 718
+  Top = 234
+  Width = 851
+  Caption = 'frmMain'
+  ClientHeight = 718
+  ClientWidth = 851
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Position = poScreenCenter
+  LCLVersion = '0.9.28.2'
+  object pnlTop: TPanel
+    Left = 0
+    Height = 58
+    Top = 0
+    Width = 851
+    Align = alTop
+    Caption = 'pnlTop'
+    TabOrder = 0
+  end
+end

@@ -38,10 +38,10 @@
         <Filename Value="Pipes.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Pipes"/>
-        <CursorPos X="72" Y="21"/>
+        <CursorPos X="102" Y="20"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="2"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -50,22 +50,20 @@
         <ComponentName Value="frmMain"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="main"/>
-        <CursorPos X="96" Y="71"/>
-        <TopLine Value="47"/>
+        <CursorPos X="70" Y="19"/>
+        <TopLine Value="1"/>
         <EditorIndex Value="0"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="main.lrs"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="1"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit2>
     </Units>
-    <JumpHistory Count="13" HistoryIndex="12">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="main.pas"/>
         <Caret Line="30" Column="63" TopLine="1"/>
@@ -91,33 +89,97 @@
         <Caret Line="36" Column="18" TopLine="1"/>
       </Position6>
       <Position7>
-        <Filename Value="main.lrs"/>
-        <Caret Line="1" Column="17" TopLine="1"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="384" Column="18" TopLine="224"/>
       </Position7>
       <Position8>
-        <Filename Value="main.lrs"/>
-        <Caret Line="30" Column="30" TopLine="1"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="7" Column="101" TopLine="1"/>
       </Position8>
       <Position9>
-        <Filename Value="main.lrs"/>
-        <Caret Line="1" Column="18" TopLine="1"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="8" Column="3" TopLine="1"/>
       </Position9>
       <Position10>
         <Filename Value="main.pas"/>
-        <Caret Line="384" Column="18" TopLine="224"/>
+        <Caret Line="74" Column="1" TopLine="43"/>
       </Position10>
       <Position11>
         <Filename Value="main.pas"/>
-        <Caret Line="7" Column="101" TopLine="1"/>
+        <Caret Line="70" Column="3" TopLine="37"/>
       </Position11>
       <Position12>
         <Filename Value="main.pas"/>
-        <Caret Line="8" Column="3" TopLine="1"/>
+        <Caret Line="424" Column="7" TopLine="337"/>
       </Position12>
       <Position13>
         <Filename Value="main.pas"/>
-        <Caret Line="74" Column="1" TopLine="43"/>
+        <Caret Line="423" Column="7" TopLine="378"/>
       </Position13>
+      <Position14>
+        <Filename Value="main.pas"/>
+        <Caret Line="422" Column="7" TopLine="377"/>
+      </Position14>
+      <Position15>
+        <Filename Value="main.pas"/>
+        <Caret Line="421" Column="7" TopLine="376"/>
+      </Position15>
+      <Position16>
+        <Filename Value="main.pas"/>
+        <Caret Line="420" Column="7" TopLine="375"/>
+      </Position16>
+      <Position17>
+        <Filename Value="main.pas"/>
+        <Caret Line="419" Column="7" TopLine="374"/>
+      </Position17>
+      <Position18>
+        <Filename Value="main.pas"/>
+        <Caret Line="418" Column="7" TopLine="373"/>
+      </Position18>
+      <Position19>
+        <Filename Value="main.pas"/>
+        <Caret Line="417" Column="7" TopLine="372"/>
+      </Position19>
+      <Position20>
+        <Filename Value="main.pas"/>
+        <Caret Line="416" Column="7" TopLine="371"/>
+      </Position20>
+      <Position21>
+        <Filename Value="main.pas"/>
+        <Caret Line="415" Column="7" TopLine="370"/>
+      </Position21>
+      <Position22>
+        <Filename Value="main.pas"/>
+        <Caret Line="395" Column="70" TopLine="120"/>
+      </Position22>
+      <Position23>
+        <Filename Value="main.pas"/>
+        <Caret Line="31" Column="44" TopLine="1"/>
+      </Position23>
+      <Position24>
+        <Filename Value="Pipes.lpr"/>
+        <Caret Line="21" Column="72" TopLine="1"/>
+      </Position24>
+      <Position25>
+        <Filename Value="main.pas"/>
+        <Caret Line="412" Column="1" TopLine="369"/>
+      </Position25>
+      <Position26>
+        <Filename Value="Pipes.lpr"/>
+        <Caret Line="16" Column="4" TopLine="1"/>
+      </Position26>
+      <Position27>
+        <Filename Value="main.pas"/>
+        <Caret Line="92" Column="2" TopLine="73"/>
+      </Position27>
+      <Position28>
+        <Filename Value="Pipes.lpr"/>
+        <Caret Line="17" Column="6" TopLine="1"/>
+      </Position28>
+      <Position29>
+        <Filename Value="main.pas"/>
+        <Caret Line="18" Column="70" TopLine="1"/>
+      </Position29>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
