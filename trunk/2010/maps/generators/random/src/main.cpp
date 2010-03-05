@@ -19,8 +19,8 @@ int main( int argc, char *argv[])
 	for (int i = 0; i < w*h; i++)
 	{
 		//int out = rand()%16;
-		for (int k = 0; k < 4; k++)
-			fprintf(fo, "%d", rand()%100 > 50);
+		//for (int k = 0; k < 4; k++)
+		fprintf(fo, "%d", rand()%16);
 		if ((i+1)%w==0)
 			fprintf(fo, "\n");
 		else

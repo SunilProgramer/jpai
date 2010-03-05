@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\$(ProjectName)($(ConfigurationName)).exe"
+				OutputFile="$(OutDir)\map_random($(ConfigurationName)).exe"
 				LinkIncremental="2"
 				ManifestFile="..\obj\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
@@ -146,6 +146,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\map_random.exe"
 				LinkIncremental="1"
 				ManifestFile="..\obj\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
