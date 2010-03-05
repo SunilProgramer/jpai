@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, LResources, main;
+  Forms, LResources, main, map, PlayerFrame;
 
 {$IFDEF WINDOWS}{$R Pipes.rc}{$ENDIF}
 

@@ -1,22 +1,149 @@
 object frmMain: TfrmMain
-  Left = 635
+  Left = 318
   Height = 718
-  Top = 234
-  Width = 851
-  Caption = 'frmMain'
+  Top = 152
+  Width = 960
+  Caption = 'PipeControl'
   ClientHeight = 718
-  ClientWidth = 851
+  ClientWidth = 960
   Font.Height = -11
   Font.Name = 'Tahoma'
+  OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '0.9.28.2'
-  object pnlTop: TPanel
+  object tbMain: TToolBar
     Left = 0
-    Height = 58
+    Height = 24
     Top = 0
-    Width = 851
-    Align = alTop
-    Caption = 'pnlTop'
+    Width = 960
+    Caption = 'tbMain'
+    EdgeBorders = [ebBottom]
     TabOrder = 0
+    object sbStep: TSpeedButton
+      Left = 256
+      Height = 22
+      Top = 0
+      Width = 64
+      Caption = 'Ход: 0'
+      Color = clBtnFace
+      NumGlyphs = 0
+    end
+    object sbStart: TSpeedButton
+      Left = 320
+      Height = 22
+      Top = 0
+      Width = 88
+      Caption = 'Старт/Стоп'
+      Color = clBtnFace
+      NumGlyphs = 0
+    end
+    object sbReset: TSpeedButton
+      Left = 408
+      Height = 22
+      Top = 0
+      Width = 48
+      Caption = 'Сброс'
+      Color = clBtnFace
+      NumGlyphs = 0
+    end
+    object sbAddPlayer: TSpeedButton
+      Left = 456
+      Height = 22
+      Top = 0
+      Width = 56
+      Caption = '+1 игрок'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbAddPlayerClick
+    end
+    object RemPlayer: TSpeedButton
+      Left = 512
+      Height = 22
+      Top = 0
+      Width = 56
+      Caption = '-1 игрок'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = RemPlayerClick
+    end
+    object fneMap: TFileNameEdit
+      Left = 1
+      Height = 22
+      Top = 0
+      Width = 232
+      FileName = '..\bin\'
+      OnAcceptFileName = fneMapAcceptFileName
+      DialogOptions = []
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 23
+      NumGlyphs = 0
+      Align = alLeft
+      TabOrder = 0
+    end
+    object tbScale: TTrackBar
+      Left = 568
+      Height = 22
+      Top = 0
+      Width = 152
+      Max = 128
+      Min = 8
+      OnChange = tbScaleChange
+      Position = 8
+      TabOrder = 1
+    end
+  end
+  object gbPlayers: TGroupBox
+    Left = 775
+    Height = 694
+    Top = 24
+    Width = 185
+    Align = alRight
+    Caption = 'Игроки'
+    TabOrder = 1
+  end
+  object pDrawArea: TPanel
+    Left = 0
+    Height = 694
+    Top = 24
+    Width = 775
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = 'pDrawArea'
+    ClientHeight = 694
+    ClientWidth = 775
+    TabOrder = 2
+    object pbDrawArea: TPaintBox
+      Left = 0
+      Height = 680
+      Top = 0
+      Width = 759
+      Align = alClient
+      OnPaint = pbDrawAreaPaint
+      OnResize = pbDrawAreaResize
+    end
+    object sbHorizontal: TScrollBar
+      Left = 0
+      Height = 14
+      Top = 680
+      Width = 775
+      Align = alBottom
+      Max = 0
+      PageSize = 0
+      TabOrder = 0
+      OnChange = pbDrawAreaPaint
+    end
+    object sbVertical: TScrollBar
+      Left = 759
+      Height = 680
+      Top = 0
+      Width = 16
+      Align = alRight
+      Kind = sbVertical
+      Max = 0
+      PageSize = 0
+      TabOrder = 1
+      OnChange = pbDrawAreaPaint
+    end
   end
 end
