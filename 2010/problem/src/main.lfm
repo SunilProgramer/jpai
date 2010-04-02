@@ -1,21 +1,18 @@
 object frmMain: TfrmMain
-  Left = 318
-  Height = 718
-  Top = 152
-  Width = 960
-  Caption = 'PipeControl'
-  ClientHeight = 718
-  ClientWidth = 960
-  Font.Height = -11
-  Font.Name = 'Tahoma'
+  Left = 508
+  Height = 300
+  Top = 200
+  Width = 825
+  Caption = 'frmMain'
+  ClientHeight = 300
+  ClientWidth = 825
   OnCreate = FormCreate
-  Position = poScreenCenter
   LCLVersion = '0.9.28.2'
   object tbMain: TToolBar
     Left = 0
     Height = 24
     Top = 0
-    Width = 960
+    Width = 825
     Caption = 'tbMain'
     EdgeBorders = [ebBottom]
     TabOrder = 0
@@ -27,27 +24,20 @@ object frmMain: TfrmMain
       Caption = 'Ход: 0'
       Color = clBtnFace
       NumGlyphs = 0
-    end
-    object sbStart: TSpeedButton
-      Left = 320
-      Height = 22
-      Top = 0
-      Width = 88
-      Caption = 'Старт/Стоп'
-      Color = clBtnFace
-      NumGlyphs = 0
+      OnClick = sbStepClick
     end
     object sbReset: TSpeedButton
-      Left = 408
+      Left = 410
       Height = 22
       Top = 0
       Width = 48
       Caption = 'Сброс'
       Color = clBtnFace
       NumGlyphs = 0
+      OnClick = sbResetClick
     end
     object sbAddPlayer: TSpeedButton
-      Left = 456
+      Left = 458
       Height = 22
       Top = 0
       Width = 56
@@ -57,7 +47,7 @@ object frmMain: TfrmMain
       OnClick = sbAddPlayerClick
     end
     object RemPlayer: TSpeedButton
-      Left = 512
+      Left = 514
       Height = 22
       Top = 0
       Width = 56
@@ -71,7 +61,6 @@ object frmMain: TfrmMain
       Height = 22
       Top = 0
       Width = 232
-      FileName = '..\bin\'
       OnAcceptFileName = fneMapAcceptFileName
       DialogOptions = []
       FilterIndex = 0
@@ -82,7 +71,7 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
     object tbScale: TTrackBar
-      Left = 568
+      Left = 570
       Height = 22
       Top = 0
       Width = 152
@@ -92,10 +81,19 @@ object frmMain: TfrmMain
       Position = 8
       TabOrder = 1
     end
+    object tbStart: TToggleBox
+      Left = 320
+      Height = 22
+      Top = 0
+      Width = 90
+      Caption = 'Старт/Стоп'
+      OnChange = tbStartChange
+      TabOrder = 2
+    end
   end
   object gbPlayers: TGroupBox
-    Left = 775
-    Height = 694
+    Left = 640
+    Height = 276
     Top = 24
     Width = 185
     Align = alRight
@@ -104,29 +102,29 @@ object frmMain: TfrmMain
   end
   object pDrawArea: TPanel
     Left = 0
-    Height = 694
+    Height = 276
     Top = 24
-    Width = 775
+    Width = 640
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pDrawArea'
-    ClientHeight = 694
-    ClientWidth = 775
+    ClientHeight = 276
+    ClientWidth = 640
     TabOrder = 2
     object pbDrawArea: TPaintBox
       Left = 0
-      Height = 680
+      Height = 259
       Top = 0
-      Width = 759
+      Width = 623
       Align = alClient
       OnPaint = pbDrawAreaPaint
       OnResize = pbDrawAreaResize
     end
     object sbHorizontal: TScrollBar
       Left = 0
-      Height = 14
-      Top = 680
-      Width = 775
+      Height = 17
+      Top = 259
+      Width = 640
       Align = alBottom
       Max = 0
       PageSize = 0
@@ -134,10 +132,10 @@ object frmMain: TfrmMain
       OnChange = pbDrawAreaPaint
     end
     object sbVertical: TScrollBar
-      Left = 759
-      Height = 680
+      Left = 623
+      Height = 259
       Top = 0
-      Width = 16
+      Width = 17
       Align = alRight
       Kind = sbVertical
       Max = 0
@@ -145,5 +143,38 @@ object frmMain: TfrmMain
       TabOrder = 1
       OnChange = pbDrawAreaPaint
     end
+  end
+  object fneTmp: TFileNameEdit
+    Left = 544
+    Height = 21
+    Top = 80
+    Width = 232
+    OnAcceptFileName = loadAI
+    DialogOptions = []
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 0
+    Align = alCustom
+    TabOrder = 3
+    Visible = False
+  end
+  object Process1: TProcess
+    Active = False
+    CommandLine = 'runarea/ai.exe'
+    CurrentDirectory = 'runarea/'
+    Options = [poWaitOnExit, poNoConsole]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoHIDE
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    left = 73
+    top = 63
   end
 end

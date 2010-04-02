@@ -1,11 +1,11 @@
-unit PlayerFrame;
+unit playerframe;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, EditBtn, ExtCtrls;
+  Classes, SysUtils, FileUtil, LResources, Forms, ExtCtrls, EditBtn;
 
 type
 

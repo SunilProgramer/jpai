@@ -1,4 +1,4 @@
-program Pipes;
+program pcontrol;
 
 {$mode objfpc}{$H+}
 
@@ -7,12 +7,13 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, LResources, main, map, PlayerFrame;
+  Forms, main, LResources, map, playerframe
+  { you can add units after this };
 
-{$IFDEF WINDOWS}{$R Pipes.rc}{$ENDIF}
+{$IFDEF WINDOWS}{$R pcontrol.rc}{$ENDIF}
 
 begin
-  {$I Pipes.lrs}
+  {$I pcontrol.lrs}
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;

@@ -6,8 +6,8 @@ object fPlayer: TfPlayer
   ClientHeight = 109
   ClientWidth = 181
   TabOrder = 0
-  DesignLeft = 744
-  DesignTop = 335
+  DesignLeft = 290
+  DesignTop = 175
   object Bevel1: TBevel
     Left = 0
     Height = 2
