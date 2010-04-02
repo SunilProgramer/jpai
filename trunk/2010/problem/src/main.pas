@@ -1,11 +1,12 @@
 unit main;
 
 {$mode objfpc}{$H+}
+
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs, Variants,
-  ExtCtrls, StdCtrls, ComCtrls, Buttons, EditBtn, map, PlayerFrame, math;
+  Classes, SysUtils, process, FileUtil, LResources, Forms, Controls, Graphics,
+  Dialogs, ComCtrls, Buttons, EditBtn, StdCtrls, ExtCtrls, Math, playerframe, map;
 
 const
   StartMap = 'test';
@@ -28,11 +29,12 @@ type
 
   TfrmMain = class(TForm)
     fneMap: TFileNameEdit;
+    fneTmp: TFileNameEdit;
     gbPlayers: TGroupBox;
     pbDrawArea: TPaintBox;
     pDrawArea: TPanel;
+    Process1: TProcess;
     sbStep: TSpeedButton;
-    sbStart: TSpeedButton;
     sbReset: TSpeedButton;
     sbAddPlayer: TSpeedButton;
     RemPlayer: TSpeedButton;
@@ -40,23 +42,33 @@ type
     sbVertical: TScrollBar;
     tbMain: TToolBar;
     tbScale: TTrackBar;
+    tbStart: TToggleBox;
     procedure fneMapAcceptFileName(Sender: TObject; var Value: String);
     procedure FormCreate(Sender: TObject);
     procedure pbDrawAreaPaint(Sender: TObject);
     procedure pbDrawAreaResize(Sender: TObject);
     procedure RemPlayerClick(Sender: TObject);
     procedure sbAddPlayerClick(Sender: TObject);
+    procedure sbHorizontalChange(Sender: TObject);
+    procedure sbResetClick(Sender: TObject);
+    procedure sbStartClick(Sender: TObject);
+    procedure sbStepClick(Sender: TObject);
     procedure tbScaleChange(Sender: TObject);
+    procedure loadAI(Sender: TObject; var Value: String);
+    procedure tbStartChange(Sender: TObject);
    private
     { Private declarations }
    public
      m: TMap;
      AppPath: String;
      players: array of TPlayer;
+     FRunning: Boolean;
      procedure AddPlayer(const AI: String);
+     function PlayersCount(): Integer;
      procedure RemovePlayer;
      procedure Draw;
      procedure DrawSegment(x, y: Integer; C: TCanvas);
+     procedure RefreshScores();
   end;
 
 var
@@ -74,7 +86,8 @@ procedure TfrmMain.fneMapAcceptFileName(Sender: TObject; var Value: String
 begin
   try
     m.Load(Value);
-  except
+  finally
+    Draw;
     //
   end;
   DeleteDirectory(AppPath + '\temp', true);
@@ -85,9 +98,10 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   m := TMap.Create();
   AppPath := ExtractFileDir(Application.ExeName);
+  FRunning := false;
   fneMap.InitialDir := AppPath + '\maps';
   fneMap.FileName := fneMap.InitialDir + '\' + StartMap + '.map';
-  fneMapAcceptFileName(self, fneMap.FileName);
+//  fneMapAcceptFileName(self, fneMap.);
   AddPlayer(DefaultAI);
   AddPlayer(DefaultAI);
 end;
@@ -106,11 +120,59 @@ end;
 procedure TfrmMain.RemPlayerClick(Sender: TObject);
 begin
   RemovePlayer;
+  sbResetClick(nil);
 end;
 
 procedure TfrmMain.sbAddPlayerClick(Sender: TObject);
 begin
   AddPlayer(DefaultAI);
+  sbResetClick(nil);
+end;
+
+procedure TfrmMain.sbHorizontalChange(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmMain.sbResetClick(Sender: TObject);
+begin
+  m.ResetValues();
+  Draw;
+  RefreshScores();
+end;
+
+procedure TfrmMain.sbStartClick(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmMain.sbStepClick(Sender: TObject);
+var
+  dir: String;
+  i: Integer;
+
+  procedure RunAI(const AAI: String; APlayer: Integer);
+  begin
+    DeleteDirectory(dir, true);
+    CopyFile(AAI, dir + '/ai.exe');
+//    CopyFile(AppPath + '/temp/temp' + IntToStr(APlayer), dir + '/temp.txt');
+    m.Save(dir + '/input.txt');//mb here place an argument for player num
+    Process1.Active := true;
+    m.ProcessAIOutput(dir + '/output.txt', APlayer);
+    //CopyFile(dir + '/temp.txt', AppPath + '/temp/temp' + IntToStr(APlayer));
+  end;
+
+begin
+  if FRunning and (Sender <> nil) then exit;
+  dir := AppPath + '/runarea';
+  ForceDirectories(AppPath + '/temp');
+  for i := 0 to PlayersCount - 1 do
+    RunAI(players[i].frm.fneAI.FileName, i);
+//  FMap.NextStep;
+//  RefreshScores;
+  Draw;
+  RefreshScores();
+  Application.ProcessMessages;
 end;
 
 procedure TfrmMain.tbScaleChange(Sender: TObject);
@@ -127,25 +189,33 @@ var
   n: Integer;
 begin
   n := Length(players) + 1;
+  if n >= 10 then
+    exit;
   try
     frm := TPlayer.Create(n, AI, gbPlayers);
+    frm.frm.fneAI.OnAcceptFileName := fneTmp.OnAcceptFileName;
   except
     frm.Free;
     raise;
   end;
   SetLength(players, n);
+//  m.PlayersCount := n;
   players[High(players)] := frm;
+  m.PlayersCount := PlayersCount();
+end;
+
+function TfrmMain.PlayersCount(): Integer;
+begin
+  Result := Length(players);
 end;
 
 procedure TfrmMain.RemovePlayer;
-var
-  frm: TPlayer;
-  n: Integer;
 begin
   if Length(players) <= 2 then
     exit;
   players[High(players)].Destroy;
   SetLength(players, Length(players) - 1);
+  m.PlayersCount := PlayersCount();
 end;
 
 procedure TfrmMain.Draw;
@@ -179,7 +249,6 @@ end;
 procedure TfrmMain.DrawSegment(x, y: Integer; C: TCanvas);
 var
   xo, yo: Integer;
-  rot: string;
   iRect: TRect;
   cl, cl1: TColor;
   cellsize, pipesize: integer;
@@ -205,7 +274,7 @@ begin
     C.Rectangle(xo, yo, xo+cellsize,yo+cellsize);
   C.Brush.Color := cl;
   C.Pen.Color:= cl1;
-  if (m.Field[x,y] and 2) <> 0 then
+  if (m.Field[x,y] and 4) <> 0 then//right
   begin
     iRect.Left := xo + (cellsize div 2);
     iRect.Top := yo - (pipesize div 2) + (cellsize div 2);
@@ -213,15 +282,15 @@ begin
     iRect.Bottom := iRect.Top + pipesize;
     C.FillRect(iRect);
   end;
-  if (m.Field[x,y] and 4) <> 0 then
+  if (m.Field[x,y] and 8) <> 0 then//up
   begin
-    iRect.Left := xo - (pipesize div 2) + (cellsize div 2);;
+    iRect.Left := xo - (pipesize div 2) + (cellsize div 2);
     iRect.Top := yo;
     iRect.Right := iRect.Left + pipesize;
     iRect.Bottom := yo + (cellsize div 2);
     C.FillRect(iRect);
   end;
-  if (m.Field[x,y] and 8) <> 0 then
+  if (m.Field[x,y] and 1) <> 0 then//left
   begin
     iRect.Left := xo;
     iRect.Top := yo - (pipesize div 2) + (cellsize div 2);
@@ -229,15 +298,44 @@ begin
     iRect.Bottom := iRect.Top + pipesize;
     C.FillRect(iRect);
   end;
-  if (m.Field[x,y] and 0) <> 0 then
+  if (m.Field[x,y] and 2) <> 0 then//down
   begin
-    iRect.Left := xo - (pipesize div 2) + (cellsize div 2);;
+    iRect.Left := xo - (pipesize div 2) + (cellsize div 2);
     iRect.Top := yo + (cellsize div 2);
     iRect.Right := iRect.Left + pipesize;
     iRect.Bottom := yo + cellsize;
     C.FillRect(iRect);
   end;
 end;
+
+procedure TfrmMain.RefreshScores();
+var
+   i: Integer;
+begin
+  m.CalculateScores();
+  for i := 0 to PlayersCount() - 1 do
+  begin
+    players[i].frm.leInfluence.Text := inttostr(m.Scores2[i + 1]);
+    players[i].frm.leScores.Text := inttostr(m.Scores1[i + 1]);
+  end;
+end;
+
+procedure TfrmMain.loadAI(Sender: TObject; var Value: String);
+begin
+  sbResetClick(nil);
+end;
+
+procedure TfrmMain.tbStartChange(Sender: TObject);
+begin
+  FRunning := not FRunning;
+  while FRunning and not m.GameOver do
+    begin
+      sbStepClick(nil);
+    end;
+  FRunning := false;
+  tbStart.Checked := false;
+end;
+
 
 
 { TPlayer }
@@ -262,5 +360,5 @@ end;
 initialization
   {$I main.lrs}
 
-
 end.
+
