@@ -1,6 +1,6 @@
 SOURCES		=	main.cpp 
 
-TARGET		=	../bin/map_random
+TARGET		=	../bin/random
 
 all:
 	g++ -fpermissive -w -o ${TARGET} ${SOURCES}

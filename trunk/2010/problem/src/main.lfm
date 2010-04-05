@@ -67,6 +67,7 @@ object frmMain: TfrmMain
       FilterIndex = 0
       HideDirectories = False
       ButtonWidth = 23
+      DirectInput = False
       NumGlyphs = 0
       Align = alLeft
       TabOrder = 0
@@ -163,8 +164,8 @@ object frmMain: TfrmMain
   end
   object prAI: TProcess
     Active = False
-    CommandLine = 'runarea\ai.exe'
-    CurrentDirectory = 'runarea\'
+    CommandLine = 'runarea/ai.exe'
+    CurrentDirectory = 'runarea/'
     Options = [poWaitOnExit, poNoConsole]
     Priority = ppNormal
     StartupOptions = []
