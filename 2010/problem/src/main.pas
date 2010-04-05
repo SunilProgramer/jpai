@@ -138,8 +138,8 @@ end;
 procedure TfrmMain.sbResetClick(Sender: TObject);
 begin
   m.ResetValues();
-  Draw;
   RefreshScores();
+  Draw;
 end;
 
 procedure TfrmMain.sbStartClick(Sender: TObject);
@@ -154,20 +154,20 @@ var
 
   procedure RunAI(const AAI: String; APlayer: Integer);
   begin
-    DeleteDirectory(dir, true);
-    //CopyFile(AAI, dir + '/ai.exe');
-//    CopyFile(AppPath + '/temp/temp' + IntToStr(APlayer), dir + '/temp.txt');
-    m.Save(dir + '/input.txt');//mb here place an argument for player num
-    prAI.CommandLine := AAI;
+    CopyFile(AAI, dir + '\ai.exe');
+    if FileExists(AppPath + '\temp\temp' + IntToStr(APlayer)) then
+      CopyFile(AppPath + '\temp\temp' + IntToStr(APlayer)+'.txt', dir + '\temp.txt');
+    m.Save(dir + '\input.txt');//mb here place an argument for player num
     prAI.Active := true;
-    m.ProcessAIOutput(dir + '/output.txt', APlayer);
-    //CopyFile(dir + '/temp.txt', AppPath + '/temp/temp' + IntToStr(APlayer));
+    m.ProcessAIOutput(dir + '\output.txt', APlayer);
+    if FileExists(dir + '\temp.txt') then
+      CopyFile(dir + '\temp.txt', AppPath + '\temp\temp' + IntToStr(APlayer)+'.txt');
   end;
 
 begin
   if FRunning and (Sender <> nil) then exit;
-  dir := AppPath + '/runarea';
-  ForceDirectories(AppPath + '/temp');
+  dir := AppPath + '\runarea';
+  ForceDirectories(AppPath + '\temp');
   for i := 0 to PlayersCount - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
   inc(m.StepsPassed);
