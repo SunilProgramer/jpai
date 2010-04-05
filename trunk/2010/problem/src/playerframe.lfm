@@ -20,17 +20,21 @@ object fPlayer: TfPlayer
     Height = 21
     Top = 0
     Width = 157
-    DialogOptions = []
+    DialogOptions = [ofFileMustExist]
+    Filter = 'Executable *.exe|*.exe'
     FilterIndex = 0
-    HideDirectories = False
+    HideDirectories = True
     ButtonWidth = 23
+    DirectInput = False
     NumGlyphs = 0
     Align = alCustom
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 0
   end
   object leInfluence: TLabeledEdit
     Left = 0
-    Height = 21
+    Height = 24
     Top = 40
     Width = 181
     Color = clForm
@@ -42,6 +46,7 @@ object fPlayer: TfPlayer
     EditLabel.Width = 118
     EditLabel.Caption = 'Захвачено территории'
     EditLabel.ParentColor = False
+    Font.Height = 16
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
@@ -50,7 +55,7 @@ object fPlayer: TfPlayer
   end
   object leScores: TLabeledEdit
     Left = 0
-    Height = 21
+    Height = 24
     Top = 80
     Width = 181
     Color = clForm
@@ -62,6 +67,7 @@ object fPlayer: TfPlayer
     EditLabel.Width = 27
     EditLabel.Caption = 'Очки'
     EditLabel.ParentColor = False
+    Font.Height = 16
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2

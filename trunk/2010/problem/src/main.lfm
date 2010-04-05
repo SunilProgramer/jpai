@@ -1,18 +1,19 @@
 object frmMain: TfrmMain
   Left = 508
-  Height = 300
+  Height = 600
   Top = 200
-  Width = 825
-  Caption = 'frmMain'
-  ClientHeight = 300
-  ClientWidth = 825
+  Width = 800
+  Caption = 'Pipe Control'
+  ClientHeight = 600
+  ClientWidth = 800
   OnCreate = FormCreate
+  Position = poScreenCenter
   LCLVersion = '0.9.28.2'
   object tbMain: TToolBar
     Left = 0
     Height = 24
     Top = 0
-    Width = 825
+    Width = 800
     Caption = 'tbMain'
     EdgeBorders = [ebBottom]
     TabOrder = 0
@@ -74,11 +75,12 @@ object frmMain: TfrmMain
       Left = 570
       Height = 22
       Top = 0
-      Width = 152
+      Width = 127
       Max = 128
       Min = 8
       OnChange = tbScaleChange
       Position = 8
+      Anchors = [akTop, akLeft, akRight]
       TabOrder = 1
     end
     object tbStart: TToggleBox
@@ -92,8 +94,8 @@ object frmMain: TfrmMain
     end
   end
   object gbPlayers: TGroupBox
-    Left = 640
-    Height = 276
+    Left = 615
+    Height = 576
     Top = 24
     Width = 185
     Align = alRight
@@ -102,20 +104,20 @@ object frmMain: TfrmMain
   end
   object pDrawArea: TPanel
     Left = 0
-    Height = 276
+    Height = 576
     Top = 24
-    Width = 640
+    Width = 615
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pDrawArea'
-    ClientHeight = 276
-    ClientWidth = 640
+    ClientHeight = 576
+    ClientWidth = 615
     TabOrder = 2
     object pbDrawArea: TPaintBox
       Left = 0
-      Height = 259
+      Height = 559
       Top = 0
-      Width = 623
+      Width = 598
       Align = alClient
       OnPaint = pbDrawAreaPaint
       OnResize = pbDrawAreaResize
@@ -123,8 +125,8 @@ object frmMain: TfrmMain
     object sbHorizontal: TScrollBar
       Left = 0
       Height = 17
-      Top = 259
-      Width = 640
+      Top = 559
+      Width = 615
       Align = alBottom
       Max = 0
       PageSize = 0
@@ -132,8 +134,8 @@ object frmMain: TfrmMain
       OnChange = pbDrawAreaPaint
     end
     object sbVertical: TScrollBar
-      Left = 623
-      Height = 259
+      Left = 598
+      Height = 559
       Top = 0
       Width = 17
       Align = alRight
@@ -145,9 +147,9 @@ object frmMain: TfrmMain
     end
   end
   object fneTmp: TFileNameEdit
-    Left = 544
+    Left = 0
     Height = 21
-    Top = 80
+    Top = 24
     Width = 232
     OnAcceptFileName = loadAI
     DialogOptions = []
@@ -159,10 +161,10 @@ object frmMain: TfrmMain
     TabOrder = 3
     Visible = False
   end
-  object Process1: TProcess
+  object prAI: TProcess
     Active = False
-    CommandLine = 'runarea/ai.exe'
-    CurrentDirectory = 'runarea/'
+    CommandLine = 'runarea\ai.exe'
+    CurrentDirectory = 'runarea\'
     Options = [poWaitOnExit, poNoConsole]
     Priority = ppNormal
     StartupOptions = []
@@ -174,7 +176,6 @@ object frmMain: TfrmMain
     WindowTop = 0
     WindowWidth = 0
     FillAttribute = 0
-    left = 73
-    top = 63
+    top = 48
   end
 end
