@@ -3,13 +3,10 @@ SOURCES		=	main.cpp
 TARGET		=	../bin/map_random
 
 all:
-	g++ -fpermissive -w -o ${TARGET} ${SOURCES}
+	g++ -w -o ${TARGET} ${SOURCES}
 
 debug:
-	g++ -g3 -fpermissive -w -o ${TARGET} ${SOURCES}
-
-strict:
-	g++ -Wall -o ${TARGET} ${SOURCES}
+	g++ -g3 -w -o ${TARGET} ${SOURCES}
 
 dist-clean:
 	rm -f ${TARGET}
