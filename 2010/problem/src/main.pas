@@ -33,7 +33,7 @@ type
     gbPlayers: TGroupBox;
     pbDrawArea: TPaintBox;
     pDrawArea: TPanel;
-    Process1: TProcess;
+    prAI: TProcess;
     sbStep: TSpeedButton;
     sbReset: TSpeedButton;
     sbAddPlayer: TSpeedButton;
@@ -104,6 +104,7 @@ begin
 //  fneMapAcceptFileName(self, fneMap.);
   AddPlayer(DefaultAI);
   AddPlayer(DefaultAI);
+  fneMapAcceptFileName(nil, fneMap.FileName);
 end;
 
 procedure TfrmMain.pbDrawAreaPaint(Sender: TObject);
@@ -154,10 +155,11 @@ var
   procedure RunAI(const AAI: String; APlayer: Integer);
   begin
     DeleteDirectory(dir, true);
-    CopyFile(AAI, dir + '/ai.exe');
+    //CopyFile(AAI, dir + '/ai.exe');
 //    CopyFile(AppPath + '/temp/temp' + IntToStr(APlayer), dir + '/temp.txt');
     m.Save(dir + '/input.txt');//mb here place an argument for player num
-    Process1.Active := true;
+    prAI.CommandLine := AAI;
+    prAI.Active := true;
     m.ProcessAIOutput(dir + '/output.txt', APlayer);
     //CopyFile(dir + '/temp.txt', AppPath + '/temp/temp' + IntToStr(APlayer));
   end;
@@ -168,6 +170,7 @@ begin
   ForceDirectories(AppPath + '/temp');
   for i := 0 to PlayersCount - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
+  inc(m.StepsPassed);
 //  FMap.NextStep;
 //  RefreshScores;
   Draw;
@@ -270,7 +273,7 @@ begin
     C.Pen.Color := clBlack;
   end;
   C.FillRect(Rect(xo, yo, xo+cellsize,yo+cellsize));
-  if C.Pen.Color <> clWhite then
+  if C.Pen.Color = clBlack then
     C.Rectangle(xo, yo, xo+cellsize,yo+cellsize);
   C.Brush.Color := cl;
   C.Pen.Color:= cl1;
@@ -318,6 +321,7 @@ begin
     players[i].frm.leInfluence.Text := inttostr(m.Scores2[i + 1]);
     players[i].frm.leScores.Text := inttostr(m.Scores1[i + 1]);
   end;
+  sbStep.Caption := 'Ход ' + IntToStr(m.StepsPassed);
 end;
 
 procedure TfrmMain.loadAI(Sender: TObject; var Value: String);

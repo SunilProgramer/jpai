@@ -19,7 +19,7 @@ type
     v: array[0..1000, 0..1000] of Boolean;
     s1: array[0..10] of Integer;
     s2: array[0..10] of Integer;
-    w, h, p, l, cp: Integer;
+    w, h, p, l, cp, st: Integer;
     go: boolean;
     function GetField(x, y: Integer): Integer;
     function GetColor(x, y: Integer): Integer;
@@ -41,6 +41,7 @@ type
     property StepsLeft: Integer read l write l;
     property CurrentPlayer: Integer read GetCP;
     property GameOver: Boolean read go;
+    property StepsPassed: Integer read st write st;
     procedure ResetValues();
     procedure CalculateScores();
 
@@ -130,6 +131,7 @@ begin
       b[i, j] := false;
       c[i, j] := 0;
     end;
+  st := 0;
 end;
 
 
