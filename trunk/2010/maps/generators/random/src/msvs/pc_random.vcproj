@@ -18,11 +18,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\bin\"
-			IntermediateDirectory="..\bin\"
+			OutputDirectory="..\..\bin\"
+			IntermediateDirectory="..\..\bin\"
 			ConfigurationType="1"
 			CharacterSet="1"
-			BuildLogFile="..\obj\BuildLog.htm"
+			BuildLogFile="..\..\obj\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -47,9 +47,9 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				ObjectFile="..\obj\"
-				ProgramDataBaseFileName="..\obj\vc90.pdb"
-				XMLDocumentationFileName="..\obj\"
+				ObjectFile="..\..\obj\"
+				ProgramDataBaseFileName="..\..\obj\vc90.pdb"
+				XMLDocumentationFileName="..\..\obj\"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -66,9 +66,9 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\map_random($(ConfigurationName)).exe"
 				LinkIncremental="2"
-				ManifestFile="..\obj\$(TargetFileName).intermediate.manifest"
+				ManifestFile="..\..\obj\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\obj\$(TargetName).pdb"
+				ProgramDatabaseFile="..\..\obj\$(TargetName).pdb"
 				SubSystem="1"
 				TargetMachine="1"
 			/>
@@ -77,12 +77,12 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				OutputManifestFile="..\obj\$(TargetFileName).embed.manifest"
-				ManifestResourceFile="..\obj\$(TargetFileName).embed.manifest.res"
+				OutputManifestFile="..\..\obj\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="..\..\obj\$(TargetFileName).embed.manifest.res"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
-				OutputDocumentFile="..\obj\$(TargetName).xml"
+				OutputDocumentFile="..\..\obj\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
@@ -99,12 +99,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\bin\"
-			IntermediateDirectory="..\bin\"
+			OutputDirectory="..\..\bin\"
+			IntermediateDirectory="..\..\bin\"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
-			BuildLogFile="..\obj\BuildLog.htm"
+			BuildLogFile="..\..\obj\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -129,9 +129,9 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				ObjectFile="..\obj\"
-				ProgramDataBaseFileName="..\obj\vc90.pdb"
-				XMLDocumentationFileName="..\obj\"
+				ObjectFile="..\..\obj\"
+				ProgramDataBaseFileName="..\..\obj\vc90.pdb"
+				XMLDocumentationFileName="..\..\obj\"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -148,9 +148,9 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\map_random.exe"
 				LinkIncremental="1"
-				ManifestFile="..\obj\$(TargetFileName).intermediate.manifest"
+				ManifestFile="..\..\obj\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\obj\$(TargetName).pdb"
+				ProgramDatabaseFile="..\..\obj\$(TargetName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -161,12 +161,12 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				OutputManifestFile="..\obj\$(TargetFileName).embed.manifest"
-				ManifestResourceFile="..\obj\$(TargetFileName).embed.manifest.res"
+				OutputManifestFile="..\..\obj\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="..\..\obj\$(TargetFileName).embed.manifest.res"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
-				OutputDocumentFile="..\obj\$(TargetName).xml"
+				OutputDocumentFile="..\..\obj\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
@@ -191,7 +191,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\main.cpp"
+				RelativePath="..\main.cpp"
 				>
 			</File>
 		</Filter>
