@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, process, FileUtil, LResources, Forms, Controls, Graphics,
-  Dialogs, ComCtrls, Buttons, EditBtn, StdCtrls, ExtCtrls, Math, playerframe, map;
+  Dialogs, ComCtrls, Buttons, EditBtn, StdCtrls, ExtCtrls, Spin, Math,
+  playerframe, map;
 
 const
   StartMap = 'test';
@@ -37,9 +38,11 @@ type
     sbStep: TSpeedButton;
     sbReset: TSpeedButton;
     sbAddPlayer: TSpeedButton;
-    RemPlayer: TSpeedButton;
+    sbRemPlayer: TSpeedButton;
     sbHorizontal: TScrollBar;
     sbVertical: TScrollBar;
+    seStepsCount: TSpinEdit;
+    sbAccept: TSpeedButton;
     tbMain: TToolBar;
     tbScale: TTrackBar;
     tbStart: TToggleBox;
@@ -47,7 +50,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure pbDrawAreaPaint(Sender: TObject);
     procedure pbDrawAreaResize(Sender: TObject);
-    procedure RemPlayerClick(Sender: TObject);
+    procedure sbAcceptClick(Sender: TObject);
+    procedure sbRemPlayerClick(Sender: TObject);
     procedure sbAddPlayerClick(Sender: TObject);
     procedure sbHorizontalChange(Sender: TObject);
     procedure sbResetClick(Sender: TObject);
@@ -63,12 +67,16 @@ type
      AppPath: String;
      players: array of TPlayer;
      FRunning: Boolean;
+     StepsLeft: Integer;
      procedure AddPlayer(const AI: String);
      function PlayersCount(): Integer;
      procedure RemovePlayer;
      procedure Draw;
      procedure DrawSegment(x, y: Integer; C: TCanvas);
      procedure RefreshScores();
+     procedure Disable();
+     procedure Enable();
+     procedure ShowFinalMessage();
   end;
 
 var
@@ -94,6 +102,7 @@ begin
 //  RefreshScores;
 end;
 
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   m := TMap.Create();
@@ -105,6 +114,7 @@ begin
   AddPlayer(DefaultAI);
   AddPlayer(DefaultAI);
   fneMapAcceptFileName(nil, fneMap.FileName);
+  sbAccept.Click();
 end;
 
 procedure TfrmMain.pbDrawAreaPaint(Sender: TObject);
@@ -116,9 +126,27 @@ procedure TfrmMain.pbDrawAreaResize(Sender: TObject);
 begin
   sbHorizontal.Max := max(0, m.Width*tbScale.Position - pDrawArea.Width);
   sbVertical.Max := max(0, m.Height*tbScale.Position - pDrawArea.Height);
+  sbHorizontal.PageSize := pbDrawArea.Width;
+  sbVertical.PageSize := pbDrawArea.Height;
 end;
 
-procedure TfrmMain.RemPlayerClick(Sender: TObject);
+procedure TfrmMain.sbAcceptClick(Sender: TObject);
+begin
+  if TSpeedButton(Sender).Caption = 'Ok' then
+  begin
+    seStepsCount.Visible := false;
+    TSpeedButton(Sender).Caption := '>>';
+    StepsLeft := seStepsCount.Value;
+    sbReset.Click();
+  end
+  else
+  begin
+    seStepsCount.Visible := true;
+    TSpeedButton(Sender).Caption := 'Ok';
+  end;
+end;
+
+procedure TfrmMain.sbRemPlayerClick(Sender: TObject);
 begin
   RemovePlayer;
   sbResetClick(nil);
@@ -138,6 +166,7 @@ end;
 procedure TfrmMain.sbResetClick(Sender: TObject);
 begin
   m.ResetValues();
+  m.StepsLeft := StepsLeft;
   RefreshScores();
   Draw;
 end;
@@ -165,12 +194,20 @@ var
   end;
 
 begin
+  if m.StepsLeft = 0 then
+  begin
+    ShowFinalMessage();
+    FRunning := false;
+    Enable();
+    exit;
+  end;
   if FRunning and (Sender <> nil) then exit;
   dir := AppPath + '\runarea';
   ForceDirectories(AppPath + '\temp');
   for i := 0 to PlayersCount - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
   inc(m.StepsPassed);
+  dec(m.StepsLeft);
 //  FMap.NextStep;
 //  RefreshScores;
   Draw;
@@ -322,21 +359,81 @@ begin
     players[i].frm.leScores.Text := inttostr(m.Scores1[i + 1]);
   end;
   sbStep.Caption := 'Ход ' + IntToStr(m.StepsPassed);
+  Caption := 'Pipe Control "'+ExtractFileName(fneMap.FileName)+'" '+
+    IntToStr(m.Width) + 'x' + IntToStr(m.Height) + ', ' + IntToStr(PlayersCount()) +
+    ' players. Step ' + IntToStr(m.StepsPassed) + '/' + IntToStr(StepsLeft);
+end;
+
+procedure TfrmMain.Disable();
+begin
+  fneMap.Enabled := false;
+  sbStep.Enabled := false;
+  sbReset.Enabled := false;
+  sbAddPlayer.Enabled := false;
+  sbRemPlayer.Enabled := false;
+  seStepsCount.Enabled := false;
+//  gbPlayers.Enabled := false;
+end;
+
+procedure TfrmMain.Enable();
+begin
+  fneMap.Enabled := true;
+  sbStep.Enabled := true;
+  sbReset.Enabled := true;
+  sbAddPlayer.Enabled := true;
+  sbRemPlayer.Enabled := true;
+  seStepsCount.Enabled := true;
+//  gbPlayers.Enabled := true;
+end;
+
+procedure TfrmMain.ShowFinalMessage();
+var
+  i: Integer;
+  maxs1, maxs2: Integer;
+  s1, s2: String;
+begin
+  maxs1 := 0;
+  maxs2 := 0;
+  s1 := '';
+  s2 := '';
+  for i := 1 to PlayersCount() do
+  begin
+    maxs1 := max(maxs1, m.Scores1[i]);
+    maxs2 := max(maxs2, m.Scores2[i]);
+  end;
+  for i := 1 to PlayersCount() do
+  begin
+    if m.Scores1[i] = maxs1 then
+      s1 := s1 + ' Player' + IntToStr(i) + ';';
+    if m.Scores2[i] = maxs2 then
+      s2 := s2 + ' Player' + IntToStr(i) + ';';
+  end;
+  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Влияние: ' +
+    IntToStr(maxs2) + ',' + s2);
 end;
 
 procedure TfrmMain.loadAI(Sender: TObject; var Value: String);
 begin
+  if FRunning then
+  begin
+    Value := '';
+    exit;
+  end;
   sbResetClick(nil);
 end;
 
 procedure TfrmMain.tbStartChange(Sender: TObject);
 begin
-  FRunning := not FRunning;
+  FRunning := TToggleBox(Sender).checked;
   while FRunning and not m.GameOver do
     begin
+      Disable();
+      try
       sbStepClick(nil);
+      except
+      end;
     end;
-  FRunning := false;
+  Enable();
   tbStart.Checked := false;
 end;
 
