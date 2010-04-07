@@ -1,9 +1,9 @@
 object fPlayer: TfPlayer
   Left = 0
-  Height = 109
+  Height = 123
   Top = 0
   Width = 181
-  ClientHeight = 109
+  ClientHeight = 123
   ClientWidth = 181
   TabOrder = 0
   DesignLeft = 290
@@ -11,7 +11,7 @@ object fPlayer: TfPlayer
   object Bevel1: TBevel
     Left = 0
     Height = 2
-    Top = 107
+    Top = 121
     Width = 181
     Align = alBottom
   end
@@ -35,14 +35,14 @@ object fPlayer: TfPlayer
   object leInfluence: TLabeledEdit
     Left = 0
     Height = 24
-    Top = 40
+    Top = 48
     Width = 181
     Color = clForm
     EditLabel.AnchorSideLeft.Control = leInfluence
     EditLabel.AnchorSideBottom.Control = leInfluence
     EditLabel.Left = 0
     EditLabel.Height = 14
-    EditLabel.Top = 23
+    EditLabel.Top = 31
     EditLabel.Width = 118
     EditLabel.Caption = 'Захвачено территории'
     EditLabel.ParentColor = False
@@ -56,14 +56,14 @@ object fPlayer: TfPlayer
   object leScores: TLabeledEdit
     Left = 0
     Height = 24
-    Top = 80
+    Top = 96
     Width = 181
     Color = clForm
     EditLabel.AnchorSideLeft.Control = leScores
     EditLabel.AnchorSideBottom.Control = leScores
     EditLabel.Left = 0
     EditLabel.Height = 14
-    EditLabel.Top = 63
+    EditLabel.Top = 79
     EditLabel.Width = 27
     EditLabel.Caption = 'Очки'
     EditLabel.ParentColor = False

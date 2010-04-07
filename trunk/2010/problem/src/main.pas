@@ -98,7 +98,7 @@ begin
     Draw;
     //
   end;
-  DeleteDirectory(AppPath + '\temp', true);
+  DeleteDirectory(AppPath + '/temp', true);
 //  RefreshScores;
 end;
 
@@ -108,12 +108,13 @@ begin
   m := TMap.Create();
   AppPath := ExtractFileDir(Application.ExeName);
   FRunning := false;
-  fneMap.InitialDir := AppPath + '\maps';
-  fneMap.FileName := fneMap.InitialDir + '\' + StartMap + '.map';
+  fneMap.InitialDir := AppPath + '/maps';
+  fneMap.FileName := fneMap.InitialDir + '/' + StartMap + '.map';
 //  fneMapAcceptFileName(self, fneMap.);
   AddPlayer(DefaultAI);
   AddPlayer(DefaultAI);
   fneMapAcceptFileName(nil, fneMap.FileName);
+  inc(tbMain.Height, 7);
   sbAccept.Click();
 end;
 
@@ -183,14 +184,14 @@ var
 
   procedure RunAI(const AAI: String; APlayer: Integer);
   begin
-    CopyFile(AAI, dir + '\ai.exe');
-    if FileExists(AppPath + '\temp\temp' + IntToStr(APlayer)) then
-      CopyFile(AppPath + '\temp\temp' + IntToStr(APlayer)+'.txt', dir + '\temp.txt');
-    m.Save(dir + '\input.txt');//mb here place an argument for player num
+    CopyFile(AAI, dir + '/ai'+ExtractFileExt(AAI));
+    if FileExists(AppPath + '/temp/temp' + IntToStr(APlayer)) then
+      CopyFile(AppPath + '/temp/temp' + IntToStr(APlayer)+'.txt', dir + '/temp.txt');
+    m.Save(dir + '/input.txt');//mb here place an argument for player num
     prAI.Active := true;
-    m.ProcessAIOutput(dir + '\output.txt', APlayer);
-    if FileExists(dir + '\temp.txt') then
-      CopyFile(dir + '\temp.txt', AppPath + '\temp\temp' + IntToStr(APlayer)+'.txt');
+    m.ProcessAIOutput(dir + '/output.txt', APlayer);
+    if FileExists(dir + '/temp.txt') then
+      CopyFile(dir + '/temp.txt', AppPath + '/temp/temp' + IntToStr(APlayer)+'.txt');
   end;
 
 begin
@@ -202,8 +203,8 @@ begin
     exit;
   end;
   if FRunning and (Sender <> nil) then exit;
-  dir := AppPath + '\runarea';
-  ForceDirectories(AppPath + '\temp');
+  dir := AppPath + '/runarea';
+  ForceDirectories(AppPath + '/temp');
   for i := 0 to PlayersCount - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
   inc(m.StepsPassed);
@@ -267,6 +268,8 @@ begin
   ly := -sbVertical.Position;
   btm := TBitmap.Create();
   btm.SetSize(pbDrawArea.Width, pbDrawArea.Height);
+  btm.Canvas.Brush.Color := clBlack;
+  btm.Canvas.FillRect(0, 0, pbDrawArea.Width, pbDrawArea.Height);
 //  showmessage(IntToStr(Integer(btm.PixelFormat)));
 //  btm.PixelFormat:=
 
