@@ -21,6 +21,7 @@ type
     s2: array[0..10] of Integer;
     w, h, p, l, cp, st: Integer;
     go: boolean;
+    fl: Boolean;
     function GetField(x, y: Integer): Integer;
     function GetColor(x, y: Integer): Integer;
     function GetBases(x, y: Integer): Boolean;
@@ -42,6 +43,7 @@ type
     property CurrentPlayer: Integer read GetCP;
     property GameOver: Boolean read go;
     property StepsPassed: Integer read st write st;
+    property Full: Boolean read fl;
     procedure ResetValues();
     procedure CalculateScores();
 
@@ -102,18 +104,24 @@ end;
 
 procedure TMap.CalculateScores();
 var
-  i, j: Integer;
+  i, j, s: Integer;
 begin
   for i := 0 to 10 do
   begin
     s2[i] := 0;
   end;
+  s := 0;
+  fl := false;
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
       inc(s1[c[i,j]]);
       inc(s2[c[i,j]]);
+      if b[i, j] then
+        inc(s);
     end;
+  if s = w*h then
+    fl := true;
 end;
 
 procedure TMap.ResetValues();
@@ -132,6 +140,7 @@ begin
       c[i, j] := 0;
     end;
   st := 0;
+  fl := false;
 end;
 
 
@@ -195,7 +204,7 @@ var
 begin
   assignfile(fo, fname);
   rewrite(fo);
-  writeln(fo, w, ' ', h, ' ', p, ' ', l);
+  writeln(fo, w, ' ', h, ' ', p, ' ', l-1);
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
