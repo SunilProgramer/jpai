@@ -7,11 +7,12 @@ interface
 uses
   Classes, SysUtils, process, FileUtil, LResources, Forms, Controls, Graphics,
   Dialogs, ComCtrls, Buttons, EditBtn, StdCtrls, ExtCtrls, Spin, Math,
-  playerframe, map;
+  playerframe, map {$IFNDEF WINDOWS}, BaseUnix{$ENDIF};
 
 const
   StartMap = 'test';
   DefaultAI = 'random';
+  Separator = DirectorySeparator;
   PLAYER_COLORS: array[0..9] of TColor = (clBlack, clRed, clBlue, clGreen, clYellow, clMaroon, clLime, clAqua, clPurple, clTeal);
 
 type
@@ -43,6 +44,7 @@ type
     sbVertical: TScrollBar;
     seStepsCount: TSpinEdit;
     sbAccept: TSpeedButton;
+    sbExpand: TSpeedButton;
     tbMain: TToolBar;
     tbScale: TTrackBar;
     tbStart: TToggleBox;
@@ -57,6 +59,7 @@ type
     procedure sbResetClick(Sender: TObject);
     procedure sbStartClick(Sender: TObject);
     procedure sbStepClick(Sender: TObject);
+    procedure sbExpandClick(Sender: TObject);
     procedure tbScaleChange(Sender: TObject);
     procedure loadAI(Sender: TObject; var Value: String);
     procedure tbStartChange(Sender: TObject);
@@ -95,11 +98,10 @@ begin
   try
     m.Load(Value);
   finally
-    Draw;
-    //
+    sbExpand.Click();
+    sbReset.Click();
   end;
-  DeleteDirectory(AppPath + '/temp', true);
-//  RefreshScores;
+  DeleteDirectory(AppPath + Separator + 'temp', true);
 end;
 
 
@@ -108,14 +110,17 @@ begin
   m := TMap.Create();
   AppPath := ExtractFileDir(Application.ExeName);
   FRunning := false;
-  fneMap.InitialDir := AppPath + '/maps';
-  fneMap.FileName := fneMap.InitialDir + '/' + StartMap + '.map';
-//  fneMapAcceptFileName(self, fneMap.);
+
+  fneMap.InitialDir := AppPath + Separator + 'maps';
+  fneMap.FileName := fneMap.InitialDir + Separator + StartMap + '.map';
+
   AddPlayer(DefaultAI);
   AddPlayer(DefaultAI);
   fneMapAcceptFileName(nil, fneMap.FileName);
   inc(tbMain.Height, 7);
   sbAccept.Click();
+  prAI.CommandLine := AppPath + Separator + 'runarea'+ Separator + 'ai';
+  prAI.CurrentDirectory := AppPath + Separator + 'runarea';
 end;
 
 procedure TfrmMain.pbDrawAreaPaint(Sender: TObject);
@@ -149,14 +154,20 @@ end;
 
 procedure TfrmMain.sbRemPlayerClick(Sender: TObject);
 begin
-  RemovePlayer;
-  sbResetClick(nil);
+  if PlayersCount() > 2 then
+  begin
+    RemovePlayer;
+    sbResetClick(nil);
+  end;
 end;
 
 procedure TfrmMain.sbAddPlayerClick(Sender: TObject);
 begin
-  AddPlayer(DefaultAI);
-  sbResetClick(nil);
+  if PlayersCount() < 10 then
+  begin
+    AddPlayer(DefaultAI);
+    sbResetClick(nil);
+  end;
 end;
 
 procedure TfrmMain.sbHorizontalChange(Sender: TObject);
@@ -184,18 +195,24 @@ var
 
   procedure RunAI(const AAI: String; APlayer: Integer);
   begin
-    CopyFile(AAI, dir + '/ai'+ExtractFileExt(AAI));
-    if FileExists(AppPath + '/temp/temp' + IntToStr(APlayer)) then
-      CopyFile(AppPath + '/temp/temp' + IntToStr(APlayer)+'.txt', dir + '/temp.txt');
-    m.Save(dir + '/input.txt');//mb here place an argument for player num
-    prAI.Active := true;
-    m.ProcessAIOutput(dir + '/output.txt', APlayer);
-    if FileExists(dir + '/temp.txt') then
-      CopyFile(dir + '/temp.txt', AppPath + '/temp/temp' + IntToStr(APlayer)+'.txt');
+    CopyFile(AAI, dir + Separator + 'ai'+GetExeExt);
+    CheckIfFileIsExecutable(dir + '/ai'+GetExeExt);
+    {$IFDEF UNIX}
+    FpChmod(dir + Separator + 'ai', &775);
+    {$ENDIF}
+    if FileExists(AppPath + Separator + 'temp/temp' + IntToStr(APlayer)) then
+      CopyFile(AppPath + Separator + 'temp' + Separator + 'temp' +
+        IntToStr(APlayer)+'.txt', dir + Separator + 'temp.txt');
+    m.Save(dir + Separator + 'input.txt');//mb here place an argument for player num
+    prAI.Execute();
+    m.ProcessAIOutput(dir + Separator + 'output.txt', APlayer);
+    if FileExists(dir + Separator + 'temp.txt') then
+      CopyFile(dir + Separator + 'temp.txt', AppPath + Separator + 'temp' +
+        Separator + 'temp' + IntToStr(APlayer)+'.txt');
   end;
 
 begin
-  if m.StepsLeft = 0 then
+  if (m.StepsLeft = 0) or m.Full then
   begin
     ShowFinalMessage();
     FRunning := false;
@@ -203,17 +220,21 @@ begin
     exit;
   end;
   if FRunning and (Sender <> nil) then exit;
-  dir := AppPath + '/runarea';
-  ForceDirectories(AppPath + '/temp');
+  dir := AppPath + Separator + 'runarea';
+  ForceDirectories(AppPath + Separator + 'temp');
   for i := 0 to PlayersCount - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
   inc(m.StepsPassed);
   dec(m.StepsLeft);
-//  FMap.NextStep;
-//  RefreshScores;
   Draw;
   RefreshScores();
   Application.ProcessMessages;
+end;
+
+procedure TfrmMain.sbExpandClick(Sender: TObject);
+begin
+  tbScale.Position := min(floor(pbDrawArea.Width/m.Width), floor(pbDrawArea.Height/m.Height));
+  tbScaleChange(tbScale);
 end;
 
 procedure TfrmMain.tbScaleChange(Sender: TObject);
@@ -230,8 +251,6 @@ var
   n: Integer;
 begin
   n := Length(players) + 1;
-  if n >= 10 then
-    exit;
   try
     frm := TPlayer.Create(n, AI, gbPlayers);
     frm.frm.fneAI.OnAcceptFileName := fneTmp.OnAcceptFileName;
@@ -252,8 +271,6 @@ end;
 
 procedure TfrmMain.RemovePlayer;
 begin
-  if Length(players) <= 2 then
-    exit;
   players[High(players)].Destroy;
   SetLength(players, Length(players) - 1);
   m.PlayersCount := PlayersCount();
@@ -270,8 +287,6 @@ begin
   btm.SetSize(pbDrawArea.Width, pbDrawArea.Height);
   btm.Canvas.Brush.Color := clBlack;
   btm.Canvas.FillRect(0, 0, pbDrawArea.Width, pbDrawArea.Height);
-//  showmessage(IntToStr(Integer(btm.PixelFormat)));
-//  btm.PixelFormat:=
 
   ox := floor(( -lx ) / tbScale.Position);
   oy := floor(( -ly ) / tbScale.Position);
@@ -375,7 +390,6 @@ begin
   sbAddPlayer.Enabled := false;
   sbRemPlayer.Enabled := false;
   seStepsCount.Enabled := false;
-//  gbPlayers.Enabled := false;
 end;
 
 procedure TfrmMain.Enable();
@@ -386,7 +400,6 @@ begin
   sbAddPlayer.Enabled := true;
   sbRemPlayer.Enabled := true;
   seStepsCount.Enabled := true;
-//  gbPlayers.Enabled := true;
 end;
 
 procedure TfrmMain.ShowFinalMessage();
@@ -414,6 +427,8 @@ begin
   ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Влияние: ' +
     IntToStr(maxs2) + ',' + s2);
 end;
+
+
 
 procedure TfrmMain.loadAI(Sender: TObject; var Value: String);
 begin
@@ -452,8 +467,8 @@ begin
   frm.Top := MaxInt;
   frm.Name := frm.Name + IntToStr(n);
   frm.fneAI.Font.Color := PLAYER_COLORS[n];
-  frm.fneAI.InitialDir := ExtractFileDir(Application.ExeName) + '\ai';
-  frm.fneAI.FileName := frm.fneAI.InitialDir + '\' + AI{$IFDEF WINDOWS} + '.exe'{$ENDIF};
+  frm.fneAI.InitialDir := ExtractFileDir(Application.ExeName) + Separator + 'ai';
+  frm.fneAI.FileName := frm.fneAI.InitialDir + Separator + AI + GetExeExt;
 end;
 
 destructor TPlayer.Destroy();

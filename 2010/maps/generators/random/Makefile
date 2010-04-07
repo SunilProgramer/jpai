@@ -1,6 +1,6 @@
-SOURCES		=	./src/main.cpp 
+SOURCES		=	src/main.cpp 
 
-TARGET		=	./bin/map_random
+TARGET		=	bin/map_random
 
 all:
 	g++ -o ${TARGET} ${SOURCES}
