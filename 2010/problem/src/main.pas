@@ -453,7 +453,7 @@ begin
   frm.Name := frm.Name + IntToStr(n);
   frm.fneAI.Font.Color := PLAYER_COLORS[n];
   frm.fneAI.InitialDir := ExtractFileDir(Application.ExeName) + '\ai';
-  frm.fneAI.FileName := frm.fneAI.InitialDir + '\' + AI + '.exe';
+  frm.fneAI.FileName := frm.fneAI.InitialDir + '\' + AI{$IFDEF WINDOWS} + '.exe'{$ENDIF};
 end;
 
 destructor TPlayer.Destroy();

@@ -32,7 +32,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbReset: TSpeedButton
-      Left = 391
+      Left = 392
       Height = 22
       Hint = 'Начать игру заново'
       Top = 0
@@ -45,7 +45,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbAddPlayer: TSpeedButton
-      Left = 431
+      Left = 432
       Height = 22
       Hint = 'Добавить одного игрока'
       Top = 0
@@ -58,7 +58,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbRemPlayer: TSpeedButton
-      Left = 487
+      Left = 488
       Height = 22
       Hint = 'Удалить последнего добавленного игрока'
       Top = 0
@@ -71,7 +71,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbAccept: TSpeedButton
-      Left = 622
+      Left = 623
       Height = 22
       Hint = 'Выбрать количество ходов'
       Top = 0
@@ -102,7 +102,7 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
     object tbScale: TTrackBar
-      Left = 647
+      Left = 648
       Height = 22
       Hint = 'Масштаб'
       Top = 0
@@ -121,7 +121,7 @@ object frmMain: TfrmMain
       Height = 22
       Hint = 'Запустить/остановить'
       Top = 0
-      Width = 80
+      Width = 81
       Caption = 'Старт/Стоп'
       OnChange = tbStartChange
       ParentShowHint = False
@@ -129,7 +129,7 @@ object frmMain: TfrmMain
       TabOrder = 2
     end
     object seStepsCount: TSpinEdit
-      Left = 543
+      Left = 544
       Height = 21
       Hint = 'Количество ходов'
       Top = 0
@@ -212,7 +212,7 @@ object frmMain: TfrmMain
   end
   object prAI: TProcess
     Active = False
-    CommandLine = 'runarea/ai'
+    CommandLine = './runarea/ai'
     CurrentDirectory = 'runarea/'
     Options = [poWaitOnExit, poNoConsole]
     Priority = ppNormal
