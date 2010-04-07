@@ -2,7 +2,7 @@
 #include <stdlib.h>
 void PrintHelp()
 {
-	printf("Usage: pc_random <output_file> <width> <height>");
+	printf("Usage: pc_random <output_file> <width> <height>\n");
 }
 int main( int argc, char *argv[])
 {

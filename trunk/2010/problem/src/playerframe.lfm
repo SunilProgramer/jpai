@@ -21,7 +21,7 @@ object fPlayer: TfPlayer
     Top = 0
     Width = 157
     DialogOptions = [ofFileMustExist]
-    Filter = 'Executable *.exe|*.exe'
+    Filter = 'Executable *.exe|*.exe|All files *|*'
     FilterIndex = 0
     HideDirectories = True
     ButtonWidth = 23
