@@ -22,7 +22,8 @@ object frmMain: TfrmMain
       Height = 22
       Hint = 'Сделать ход'
       Top = 0
-      Width = 64
+      Width = 55
+      Align = alCustom
       Caption = 'Ход: 0'
       Color = clBtnFace
       NumGlyphs = 0
@@ -31,7 +32,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbReset: TSpeedButton
-      Left = 392
+      Left = 391
       Height = 22
       Hint = 'Начать игру заново'
       Top = 0
@@ -44,7 +45,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbAddPlayer: TSpeedButton
-      Left = 432
+      Left = 431
       Height = 22
       Hint = 'Добавить одного игрока'
       Top = 0
@@ -57,7 +58,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbRemPlayer: TSpeedButton
-      Left = 488
+      Left = 487
       Height = 22
       Hint = 'Удалить последнего добавленного игрока'
       Top = 0
@@ -70,7 +71,7 @@ object frmMain: TfrmMain
       ParentShowHint = False
     end
     object sbAccept: TSpeedButton
-      Left = 623
+      Left = 622
       Height = 22
       Hint = 'Выбрать количество ходов'
       Top = 0
@@ -101,7 +102,7 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
     object tbScale: TTrackBar
-      Left = 648
+      Left = 647
       Height = 22
       Hint = 'Масштаб'
       Top = 0
@@ -116,11 +117,11 @@ object frmMain: TfrmMain
       TabOrder = 1
     end
     object tbStart: TToggleBox
-      Left = 320
+      Left = 311
       Height = 22
       Hint = 'Запустить/остановить'
       Top = 0
-      Width = 72
+      Width = 80
       Caption = 'Старт/Стоп'
       OnChange = tbStartChange
       ParentShowHint = False
@@ -128,7 +129,7 @@ object frmMain: TfrmMain
       TabOrder = 2
     end
     object seStepsCount: TSpinEdit
-      Left = 544
+      Left = 543
       Height = 21
       Hint = 'Количество ходов'
       Top = 0
@@ -211,7 +212,7 @@ object frmMain: TfrmMain
   end
   object prAI: TProcess
     Active = False
-    CommandLine = 'runarea/ai.exe'
+    CommandLine = 'runarea/ai'
     CurrentDirectory = 'runarea/'
     Options = [poWaitOnExit, poNoConsole]
     Priority = ppNormal
