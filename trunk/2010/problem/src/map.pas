@@ -14,6 +14,7 @@ type
   TMap = class
   private
     f: array[0..1000, 0..1000] of Integer;
+    fr: array[0..1000, 0..1000] of Integer;
     c: array[0..1000, 0..1000] of Integer;
     b: array[0..1000, 0..1000] of Boolean;
     v: array[0..1000, 0..1000] of Boolean;
@@ -138,6 +139,7 @@ begin
     begin
       b[i, j] := false;
       c[i, j] := 0;
+      f[i, j] := fr[i, j];
     end;
   st := 0;
   fl := false;
@@ -153,7 +155,10 @@ begin
      (((y < 1) or (y > h)) or
       ((d < 0) or (d > 3)))) or
        (b[x - 1, y - 1]) then
+  begin
+    cp := (cp + 1) mod PlayersCount;
     exit;
+  end;
   dec(x);
   dec(y);
   f[x, y] := (f[x, y] shr d) or (f[x, y] shl (4 - d));
@@ -193,6 +198,7 @@ begin
     for i := 0 to w - 1 do
     begin
       read(fi, f[i, j]);
+      fr[i, j] := f[i, j];
     end;
   closefile(fi);
 end;
