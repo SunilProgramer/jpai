@@ -8,5 +8,5 @@ all:
 debug:
 	g++ -g3 -o ${TARGET} ${SOURCES}
 
-dist-clean:
+distclean:
 	rm -f ${TARGET}
