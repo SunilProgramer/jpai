@@ -1,12 +1,13 @@
 object frmMain: TfrmMain
-  Left = 324
+  Left = 759
   Height = 600
-  Top = 119
+  Top = 286
   Width = 800
   Caption = 'Pipe Control'
   ClientHeight = 600
   ClientWidth = 800
   OnCreate = FormCreate
+  OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '0.9.28.2'
   object tbMain: TToolBar
