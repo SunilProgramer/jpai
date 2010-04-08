@@ -17,8 +17,8 @@ int main()
 	ofstream fo; fo.open("output.txt", ios::out);
 	int w, h, t;
 	int l = 0;
-	TPoint *tmparr = new TPoint[w*(h+1)];
 	fi>>w>>h>>t>>l;
+	TPoint *tmparr = new TPoint[w*(h+1)];
 	l = 0;
 	for (int y = 0; y < h; y++)
 	{
