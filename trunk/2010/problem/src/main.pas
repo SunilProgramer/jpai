@@ -127,7 +127,9 @@ procedure TfrmMain.FormResize(Sender: TObject);
 begin
   tbMain.Width := frmMain.ClientWidth;
   pDrawArea.Width := frmMain.ClientWidth - gbPlayers.Width;
+  Application.ProcessMessages;
 end;
+
 
 procedure TfrmMain.pbDrawAreaPaint(Sender: TObject);
 begin
@@ -140,7 +142,6 @@ begin
   sbVertical.Max := max(0, m.Height*tbScale.Position - pDrawArea.Height);
   sbHorizontal.PageSize := pbDrawArea.Width;
   sbVertical.PageSize := pbDrawArea.Height;
-  {$IFDEF UNIX}Draw;{$ENDIF}
 end;
 
 procedure TfrmMain.sbAcceptClick(Sender: TObject);
@@ -249,6 +250,7 @@ begin
   sbHorizontal.Max := max(0, m.Width*tbScale.Position - pDrawArea.Width);
   sbVertical.Max := max(0, m.Height*tbScale.Position - pDrawArea.Height);
   Draw;
+  Application.ProcessMessages;
 end;
 
 
