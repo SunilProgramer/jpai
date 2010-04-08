@@ -204,11 +204,12 @@ var
   procedure RunAI(const AAI: String; APlayer: Integer);
   begin
     CopyFile(AAI, dir + DirectorySeparator + 'ai'+GetExeExt);
-    CheckIfFileIsExecutable(dir + '/ai'+GetExeExt);
     {$IFDEF UNIX}
     FpChmod(dir + DirectorySeparator + 'ai', &775);
     {$ENDIF}
-    if FileExists(AppPath + DirectorySeparator + 'temp/temp' + IntToStr(APlayer)) then
+    CheckIfFileIsExecutable(dir + DirectorySeparator + 'ai'+GetExeExt);
+    if FileExists(AppPath + DirectorySeparator + 'temp' + DirectorySeparator +
+      'temp' + IntToStr(APlayer)) then
       CopyFile(AppPath + DirectorySeparator + 'temp' + DirectorySeparator + 'temp' +
         IntToStr(APlayer)+'.txt', dir + DirectorySeparator + 'temp.txt');
     m.Save(dir + DirectorySeparator + 'input.txt');//mb here place an argument for player num
@@ -231,12 +232,18 @@ begin
   dir := AppPath + DirectorySeparator + 'runarea';
   ForceDirectories(AppPath + DirectorySeparator + 'temp');
   for i := 0 to PlayersCount() - 1 do
+    if not FileExists(players[i].frm.fneAI.FileName) then
+    begin
+      showmessage('Пожалуйста выберите файл искусственного интеллекта для Игрока ' +
+        IntToStr(i+1) + '.');
+      exit;
+    end;
+  for i := 0 to PlayersCount() - 1 do
     RunAI(players[i].frm.fneAI.FileName, i);
   inc(m.StepsPassed);
   dec(m.StepsLeft);
-  Draw;
   RefreshScores();
-  Application.ProcessMessages;
+  Draw;
 end;
 
 procedure TfrmMain.sbExpandClick(Sender: TObject);
@@ -250,7 +257,6 @@ begin
   sbHorizontal.Max := max(0, m.Width*tbScale.Position - pDrawArea.Width);
   sbVertical.Max := max(0, m.Height*tbScale.Position - pDrawArea.Height);
   Draw;
-  Application.ProcessMessages;
 end;
 
 
@@ -312,6 +318,7 @@ begin
   pbDrawArea.Canvas.CopyRect(Rect(0, 0, pbDrawArea.Width, pbDrawArea.Height),
     btm.Canvas, Rect(0, 0, pbDrawArea.Width, pbDrawArea.Height));
   btm.Free();
+  Application.ProcessMessages;
 end;
 
 procedure TfrmMain.DrawSegment(x, y: Integer; C: TCanvas);
