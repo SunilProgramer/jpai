@@ -118,7 +118,7 @@ begin
     begin
       inc(s1[c[i,j]]);
       inc(s2[c[i,j]]);
-      if b[i, j] then
+      if (b[i, j]) or (f[i,j]=0) then
         inc(s);
     end;
   if s = w*h then
@@ -154,7 +154,8 @@ begin
   if (((x < 1) or (x > w)) or
      (((y < 1) or (y > h)) or
       ((d < 0) or (d > 3)))) or
-       (b[x - 1, y - 1]) then
+       (b[x - 1, y - 1]) or (f[x - 1, y - 1] = 0)
+    then
   begin
     cp := (cp + 1) mod PlayersCount;
     exit;

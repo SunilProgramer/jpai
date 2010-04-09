@@ -1,7 +1,7 @@
-#include<fstream>
-#include<time.h>
-#include<stdlib.h>
-#include"../../lib/cell.h"
+#include <fstream>
+#include <time.h>
+#include <stdlib.h>
+#include "../../inc/cell.h"
 using namespace std;
 
 struct TPoint
