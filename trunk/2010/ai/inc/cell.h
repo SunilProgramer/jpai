@@ -1,6 +1,7 @@
 #ifndef CELL_HEADER
 #define CELL_HEADER
-#include<istream>
+#include <istream>
+#include <cstring>
 using namespace std;
 struct Cell
 {
@@ -16,8 +17,7 @@ struct Cell
 	}
 	int Signature()
 	{
-		return (((((((Up << 1) | Right) << 1) | Down) << 1) | Left) << 1) | 
-		  (Player << 6)|(Fixed << 5);
+		return Player<<6 + Fixed<<4 + Up<<3 + Right<<2 + Down<<1 + Left;
 	}
 };
 

@@ -1,7 +1,7 @@
-#include<fstream>
-#include<stdlib.h>
-#include<time.h>
-#include"../../lib/cell.h"
+#include <fstream>
+#include <stdlib.h>
+#include <time.h>
+#include "../../inc/cell.h"
 using namespace std;
 
 int main()

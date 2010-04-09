@@ -16,12 +16,10 @@ int main( int argc, char *argv[])
 	FILE *fo = fopen(argv[1], "w");
 	fprintf(fo, "%d %d\n", w, h);
 	
-	for (int i = 0; i < w*h; i++)
+	for (int i = 0; i < w * h; i++)
 	{
-		//int out = rand()%16;
-		//for (int k = 0; k < 4; k++)
 		fprintf(fo, "%d", rand()%16);
-		if ((i+1)%w==0)
+		if ((i + 1) % w == 0)
 			fprintf(fo, "\n");
 		else
 		fprintf(fo, " ");
