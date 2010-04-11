@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, main, LResources, map, playerframe
+  Forms, main, LResources, map, playerframe, aihandler
   { you can add units after this };
 
 {$IFDEF WINDOWS}{$R pcontrol.rc}{$ENDIF}
