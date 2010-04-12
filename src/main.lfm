@@ -1,12 +1,11 @@
 object frmMain: TfrmMain
-  Left = 1678
+  Left = 759
   Height = 600
-  Top = 144
+  Top = 286
   Width = 800
   Caption = 'Pipe Control'
   ClientHeight = 600
   ClientWidth = 800
-  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnResize = FormResize
   OnWindowStateChange = FormResize
@@ -242,12 +241,5 @@ object frmMain: TfrmMain
     WindowWidth = 0
     FillAttribute = 0
     top = 48
-  end
-  object tTerminateTimer: TTimer
-    Enabled = False
-    Interval = 3000
-    OnTimer = tTerminateTimerTimer
-    left = 30
-    top = 49
   end
 end

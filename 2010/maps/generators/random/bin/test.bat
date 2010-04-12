@@ -1,1 +1,0 @@
-map_random test.map 25 25

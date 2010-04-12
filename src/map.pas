@@ -18,7 +18,6 @@ type
     c: array[0..1000, 0..1000] of Integer;
     b: array[0..1000, 0..1000] of Boolean;
     v: array[0..1000, 0..1000] of Boolean;
-    sc: array[0..100] of Integer;
     s1: array[0..10] of Integer;
     s2: array[0..10] of Integer;
     w, h, p, l, cp, st: Integer;
@@ -27,9 +26,8 @@ type
     function GetField(x, y: Integer): Integer;
     function GetColor(x, y: Integer): Integer;
     function GetBases(x, y: Integer): Boolean;
-    function Fill(x, y, z: Integer): Integer;
+    procedure Fill(x, y, z: Integer);
     function GetCP: Integer;
-    procedure SetCp(pl: Integer);
     function gets1(player: integer): integer;
     function gets2(player: integer): integer;
   public
@@ -43,7 +41,7 @@ type
     property Scores2[player: Integer]: Integer read gets2;
     property PlayersCount: Integer read p write p;
     property StepsLeft: Integer read l write l;
-    property CurrentPlayer: Integer read GetCP write SetCP;
+    property CurrentPlayer: Integer read GetCP;
     property GameOver: Boolean read go;
     property StepsPassed: Integer read st write st;
     property Full: Boolean read fl;
@@ -62,9 +60,8 @@ implementation
 
 { TMap }
 
-function TMap.Fill(x, y, z: Integer): Integer;
+procedure TMap.Fill(x, y, z: Integer);
 begin
-  Result := 0;
   if ((x < 0) or (x >= w)) or
      ((y < 0) or (y >= h)) then
     exit;
@@ -74,28 +71,21 @@ begin
     exit;
   if (v[x, y]) then
     exit;
-  if c[x, y] <> CurrentPlayer then
-    Result := 1;
   c[x, y] := CurrentPlayer;
   v[x, y] := true;
   if (Field[x, y] and 2) <> 0 then
-    Result := Result + Fill(x, y + 1, 8);
+    Fill(x, y + 1, 8);
   if (Field[x, y] and 4) <> 0 then
-    Result := Result + Fill(x + 1, y, 1);
+    Fill(x + 1, y, 1);
   if (Field[x, y] and 8) <> 0 then
-    Result := Result + Fill(x, y - 1, 2);
+    Fill(x, y - 1, 2);
   if (Field[x, y] and 1) <> 0 then
-    Result := Result + Fill(x - 1, y, 4);
+    Fill(x - 1, y, 4);
 end;
 
 function TMap.GetCP: Integer;
 begin
   Result := cp + 1;
-end;
-
-procedure TMap.SetCp(pl: Integer);
-begin
-  cp := pl;
 end;
 
 function TMap.gets1(player: integer): integer;
@@ -120,15 +110,13 @@ begin
   for i := 0 to 10 do
   begin
     s2[i] := 0;
-    inc(s1[i], sc[i]);
-    sc[i] := 0;
   end;
   s := 0;
   fl := false;
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
-      //inc(s1[c[i,j]]);
+      inc(s1[c[i,j]]);
       inc(s2[c[i,j]]);
       if (b[i, j]) or (f[i,j]=0) then
         inc(s);
@@ -163,14 +151,13 @@ var
   i, j: integer;
 begin
   Result := -1;
-  sc[cp + 1] := 0;
   if (((x < 1) or (x > w)) or
      (((y < 1) or (y > h)) or
       ((d < 0) or (d > 3)))) or
        (b[x - 1, y - 1]) or (f[x - 1, y - 1] = 0)
     then
   begin
-//    cp := (cp + 1) mod PlayersCount;
+    cp := (cp + 1) mod PlayersCount;
     exit;
   end;
   dec(x);
@@ -179,9 +166,9 @@ begin
   for i := 0 to w - 1 do
     for j := 0 to h - 1 do
       v[i, j] := false;
-  sc[cp + 1] := Fill(x, y, 15);
+  Fill(x, y, 15);
   b[x, y] := true;
-  //cp := (cp + 1) mod PlayersCount;
+  cp := (cp + 1) mod PlayersCount;
 end;
 
 function TMap.GetField(x, y: Integer): Integer;
@@ -247,7 +234,6 @@ var
   fi: TextFile;
   x, y, d: Integer;
 begin
-  if not FileExists(fname) then exit;
   assignfile(fi, fname);
   reset(fi);
   try
