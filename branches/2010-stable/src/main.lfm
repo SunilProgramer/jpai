@@ -1,0 +1,245 @@
+object frmMain: TfrmMain
+  Left = 759
+  Height = 600
+  Top = 286
+  Width = 800
+  Caption = 'Pipe Control'
+  ClientHeight = 600
+  ClientWidth = 800
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnWindowStateChange = FormResize
+  Position = poScreenCenter
+  LCLVersion = '0.9.28.2'
+  object tbMain: TToolBar
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 800
+    Caption = 'tbMain'
+    EdgeBorders = [ebBottom]
+    TabOrder = 0
+    object sbStep: TSpeedButton
+      Left = 256
+      Height = 22
+      Hint = 'Сделать ход'
+      Top = 0
+      Width = 55
+      Align = alCustom
+      Caption = 'Ход: 0'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbStepClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object sbReset: TSpeedButton
+      Left = 392
+      Height = 22
+      Hint = 'Начать игру заново'
+      Top = 0
+      Width = 40
+      Caption = 'Сброс'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbResetClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object sbAddPlayer: TSpeedButton
+      Left = 432
+      Height = 22
+      Hint = 'Добавить одного игрока'
+      Top = 0
+      Width = 56
+      Caption = '+1 игрок'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbAddPlayerClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object sbRemPlayer: TSpeedButton
+      Left = 488
+      Height = 22
+      Hint = 'Удалить последнего добавленного игрока'
+      Top = 0
+      Width = 56
+      Caption = '-1 игрок'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbRemPlayerClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object sbAccept: TSpeedButton
+      Left = 623
+      Height = 22
+      Hint = 'Выбрать количество ходов'
+      Top = 0
+      Width = 25
+      Caption = 'Ok'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbAcceptClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object sbExpand: TSpeedButton
+      Left = 648
+      Height = 22
+      Hint = 'Развернуть поле'
+      Top = 0
+      Width = 20
+      Caption = 'X'
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = sbExpandClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object fneMap: TFileNameEdit
+      Left = 1
+      Height = 22
+      Hint = 'Карта'
+      Top = 0
+      Width = 232
+      OnAcceptFileName = fneMapAcceptFileName
+      DialogOptions = [ofFileMustExist]
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 23
+      DirectInput = False
+      NumGlyphs = 0
+      Align = alLeft
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object tbScale: TTrackBar
+      Left = 668
+      Height = 22
+      Hint = 'Масштаб'
+      Top = 0
+      Width = 132
+      Max = 128
+      Min = 8
+      OnChange = tbScaleChange
+      Position = 8
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object tbStart: TToggleBox
+      Left = 311
+      Height = 22
+      Hint = 'Запустить/остановить'
+      Top = 0
+      Width = 81
+      Caption = 'Старт/Стоп'
+      OnChange = tbStartChange
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object seStepsCount: TSpinEdit
+      Left = 544
+      Height = 21
+      Hint = 'Количество ходов'
+      Top = 0
+      Width = 79
+      MaxValue = 10000
+      MinValue = 1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+      Value = 1000
+    end
+  end
+  object gbPlayers: TGroupBox
+    Left = 615
+    Height = 576
+    Top = 24
+    Width = 185
+    Align = alRight
+    Caption = 'Игроки'
+    TabOrder = 1
+  end
+  object pDrawArea: TPanel
+    Left = 0
+    Height = 576
+    Top = 24
+    Width = 615
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = 'pDrawArea'
+    ClientHeight = 576
+    ClientWidth = 615
+    TabOrder = 2
+    object pbDrawArea: TPaintBox
+      Left = 0
+      Height = 559
+      Top = 0
+      Width = 598
+      Align = alClient
+      OnPaint = pbDrawAreaPaint
+      OnResize = pbDrawAreaResize
+    end
+    object sbHorizontal: TScrollBar
+      Left = 0
+      Height = 17
+      Top = 559
+      Width = 615
+      Align = alBottom
+      Max = 0
+      PageSize = 200
+      TabOrder = 0
+      OnChange = pbDrawAreaPaint
+    end
+    object sbVertical: TScrollBar
+      Left = 598
+      Height = 559
+      Top = 0
+      Width = 17
+      Align = alRight
+      Kind = sbVertical
+      Max = 0
+      PageSize = 200
+      TabOrder = 1
+      OnChange = pbDrawAreaPaint
+    end
+  end
+  object fneTmp: TFileNameEdit
+    Left = 40
+    Height = 21
+    Top = 72
+    Width = 232
+    OnAcceptFileName = loadAI
+    DialogOptions = []
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 0
+    Align = alCustom
+    TabOrder = 3
+    Visible = False
+  end
+  object prAI: TProcess
+    Active = False
+    CommandLine = 'runarea/ai'
+    CurrentDirectory = 'runarea/'
+    Options = [poWaitOnExit, poNoConsole]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoHIDE
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    top = 48
+  end
+end
