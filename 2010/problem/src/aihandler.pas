@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Controls, Dialogs, Forms, ExtCtrls, EditBtn, Graphics, process, AsyncProcess,
-  playerframe, map;
+  playerframe, map {$IFDEF UNIX}, BaseUnix{$ENDIF};
 
 const
   PLAYER_COLORS: array[0..9] of TColor = (clBlack, clRed, clBlue, clGreen, clYellow, clMaroon, clLime, clAqua, clPurple, clTeal);
@@ -264,7 +264,6 @@ begin
   m.Save(rundir + DirectorySeparator + 'input.txt');
   timer.Enabled := true;
   AProcess.Execute();
-  //mb remove output.txt
 end;
 
 function TAIHandler.AddPlayer(AI: string): Boolean;
@@ -365,7 +364,7 @@ begin
     raise Exception.Create('WTF?'); //check this out
   CopyFile(Form.fneAI.FileName, destdir + DirectorySeparator + 'ai'+GetExeExt);
   {$IFDEF UNIX}// changing file attributes
-  FpChmod(dir + DirectorySeparator + 'ai', &775);
+  FpChmod(destdir + DirectorySeparator + 'ai', &775);
   {$ENDIF}
   CheckIfFileIsExecutable(destdir + DirectorySeparator + 'ai'+GetExeExt);// mb delete this
   if FileExists(tempdir + DirectorySeparator + 'temp' + IntToStr(Form.Tag)) then

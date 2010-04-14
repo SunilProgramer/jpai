@@ -66,13 +66,8 @@ type
    private
     { Private declarations }
    public
-    // m: TMap;
      Handler: TPipeAIHandler;
-//     players: array of TPlayer;
      executing: Boolean;
-//     procedure AddPlayer(const AI: String);
-//     function PlayersCount(): Integer;
-//     procedure RemovePlayer;
      procedure Draw;
      procedure DrawSegment(x, y: Integer; C: TCanvas);
      procedure RefreshScores();
@@ -123,13 +118,8 @@ begin
   fneMap.InitialDir := Handler.AppPath + DirectorySeparator + 'maps';
   fneMap.FileName := fneMap.InitialDir + DirectorySeparator + StartMap + '.map';
 
-  //AddPlayer(DefaultAI);
-  //AddPlayer(DefaultAI);
   fneMapAcceptFileName(nil, fneMap.FileName);
   inc(tbMain.Height, 7);
-  //prAI.CommandLine := Handler.AppPath + DirectorySeparator + 'runarea'+ DirectorySeparator + 'ai';
-  //prAI.CurrentDirectory := Handler.AppPath + DirectorySeparator + 'runarea';
-  //executing := false;
   sbAccept.Click();
 end;
 
@@ -161,7 +151,6 @@ begin
     seStepsCount.Visible := false;
     TSpeedButton(Sender).Caption := '>>';
     Handler.StepsLeft := seStepsCount.Value;
-//    sbReset.Click();
   end
   else
   begin
@@ -200,60 +189,6 @@ begin
 end;
 
 procedure TfrmMain.sbStepClick(Sender: TObject);
-{var
-  dir: String;
-  i: Integer;
-
-  procedure RunAI(const AAI: String; APlayer: Integer);
-  begin
-    CopyFile(AAI, dir + DirectorySeparator + 'ai'+GetExeExt);
-    {$IFDEF UNIX}
-    FpChmod(dir + DirectorySeparator + 'ai', &775);
-    {$ENDIF}
-    CheckIfFileIsExecutable(dir + DirectorySeparator + 'ai'+GetExeExt);
-    if FileExists(Handler.AppPath + DirectorySeparator + 'temp' + DirectorySeparator +
-      'temp' + IntToStr(APlayer)) then
-      CopyFile(Handler.AppPath + DirectorySeparator + 'temp' + DirectorySeparator + 'temp' +
-        IntToStr(APlayer)+'.txt', dir + DirectorySeparator + 'temp.txt');
-    Handler.map.Save(dir + DirectorySeparator + 'input.txt');//mb here place an argument for player num
-    prAI.Execute();
-    executing := true;
-    //while executing do
-    //begin
-
-    //end;
-//    tTerminateTimer.Enabled := false;
-//    showmessage('good');
-    Handler.map.ProcessAIOutput(dir + DirectorySeparator + 'output.txt', APlayer);
-    if FileExists(dir + DirectorySeparator + 'temp.txt') then
-      CopyFile(dir + DirectorySeparator + 'temp.txt', Handler.AppPath + DirectorySeparator + 'temp' +
-        DirectorySeparator + 'temp' + IntToStr(APlayer)+'.txt');
-  end;
-
-begin
-  if (Handler.map.StepsLeft = 0) or Handler.map.Full then
-  begin
-    ShowFinalMessage();
-    Handler.FRunning := false;
-    Enable();
-    exit;
-  end;
-  if Handler.FRunning and (Sender <> nil) then exit;
-  dir := Handler.AppPath + DirectorySeparator + 'runarea';
-  ForceDirectories(Handler.AppPath + DirectorySeparator + 'temp');
-  for i := 0 to Handler.PlayersCount - 1 do
-    if not FileExists(Handler.Players[i].Form.fneAI.FileName) then
-    begin
-      showmessage('Пожалуйста выберите файл искусственного интеллекта для Игрока ' +
-        IntToStr(i+1) + '.');
-      exit;
-    end;
-  for i := 0 to Handler.PlayersCount - 1 do
-    RunAI(Handler.Players[i].Form.fneAI.FileName, i);
-  inc(Handler.map.StepsPassed);
-  dec(Handler.map.StepsLeft);
-  RefreshScores();
-  Draw;}
 begin
   Disable();
   Handler.MakeStep();
@@ -272,37 +207,6 @@ begin
   Draw;
 end;
 
-
-{procedure TfrmMain.AddPlayer(const AI: String);
-var
-  player: TPlayer;
-  n: Integer;
-begin
-  n := Length(players) + 1;
-  try
-    player := TPlayer.Create(n, AI, gbPlayers);
-    player.Form.fneAI.OnAcceptFileName := fneTmp.OnAcceptFileName;
-  except
-    player.Free;
-    raise;
-  end;
-  SetLength(players, n);
-//  m.PlayersCount := n;
-  players[High(players)] := player;
-  m.PlayersCount := PlayersCount();
-end; }
-
-{function TfrmMain.PlayersCount(): Integer;
-begin
-  Result := Length(players);
-end; }
-
-{procedure TfrmMain.RemovePlayer;
-begin
-  players[High(players)].Destroy;
-  SetLength(players, Length(players) - 1);
-  m.PlayersCount := PlayersCount();
-end;  }
 
 procedure TfrmMain.Draw;
 var
@@ -464,15 +368,6 @@ begin
   if TToggleBox(Sender).checked then
     Disable();
   Handler.FRunning := TToggleBox(Sender).checked;
-{  while Handler.FRunning and not Handler.map.GameOver do
-    begin
-      Disable();
-      try
-      sbStepClick(nil);
-      except
-      end;
-    end;                   }
-{  tbStart.Checked := false;}
 end;
 
 procedure TfrmMain.tTerminateTimerTimer(Sender: TObject);
@@ -481,20 +376,6 @@ begin
   tTerminateTimer.Enabled := false;
   executing := false;
 end;
-
-
-{constructor TPlayer.Create(n: Integer; AI: String; Parent: TWinControl);
-begin
-  frm := TfPlayer.Create(Parent);
-  frHandler.map.Parent := Parent;
-  frHandler.map.Align := alTop;
-  frHandler.map.Top := MaxInt;
-  frHandler.map.Name := frHandler.map.Name + IntToStr(n);
-  frHandler.map.fneAI.Font.Color := PLAYER_COLORS[n];
-  frHandler.map.fneAI.InitialDir := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'ai';
-  frHandler.map.fneAI.FileName := frHandler.map.fneAI.InitialDir + DirectorySeparator + AI + GetExeExt;
-end;     }
-
 
 { TPipeAIHandler }
 
@@ -505,8 +386,11 @@ begin
   frmMain.Draw;
   if not FRunning then
     frmMain.tbStart.Checked := false;
-  if not FRunning{Enabled} then
-    frmMain.Enable()
+  if not FRunning then
+  begin
+    frmMain.Enable();
+    Enabled := true;
+  end
   else
     frmMain.Disable();
 end;
