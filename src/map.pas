@@ -5,7 +5,7 @@ unit map;
 interface
 
 uses
-  Classes, SysUtils, Dialogs;
+  Classes, SysUtils, Dialogs, log;
 
 type
 
@@ -24,6 +24,7 @@ type
     w, h, p, l, cp, st: Integer;
     go: boolean;
     fl: Boolean;
+    logfile: TLog;
     function GetField(x, y: Integer): Integer;
     function GetColor(x, y: Integer): Integer;
     function GetBases(x, y: Integer): Boolean;
@@ -105,6 +106,7 @@ end;
 constructor TMap.Create();
 begin
   go := false;
+  logfile := TLog.Create;
 end;
 
 procedure TMap.CalculateScores();
@@ -149,6 +151,7 @@ begin
     end;
   st := 0;
   fl := false;
+  logfile.Clear();
 end;
 
 
@@ -174,6 +177,8 @@ begin
     for j := 0 to h - 1 do
       v[i, j] := false;
   sc[cp + 1] := Fill(x, y, 15);
+  logfile.Message('Игрок'+IntToStr(cp + 1) + ' поворачивает сегмент (' + IntToStr(x+1) + ',' +
+    IntToStr(y+1) + ') на ' + IntToStr(d*90)+' градусов и получает ' + IntToStr(sc[cp + 1]) + ' очков.');
   b[x, y] := true;
   cp := (cp + 1) mod PlayersCount;
 end;
@@ -214,7 +219,7 @@ end;
 procedure TMap.Save(fname: string);
 var
   fo: TextFile;
-  i, j: Integer;
+  i, j, col: Integer;
 begin
   assignfile(fo, fname);
   rewrite(fo);
@@ -222,7 +227,10 @@ begin
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
-      write(fo, Color[i, j]);
+      col := 0;
+      if Color[i, j] <> 0 then
+        col := (Color[i, j] - 1 + PlayersCount - cp) mod PlayersCount + 1;
+      write(fo, col);
       write(fo, Integer(Bases[i, j]));
       write(fo, (Field[i, j] and 8) shr 3);
       write(fo, (Field[i, j] and 4) shr 2);
