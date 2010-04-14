@@ -220,7 +220,7 @@ end;
 procedure TMap.Save(fname: string);
 var
   fo: TextFile;
-  i, j: Integer;
+  i, j, col: Integer;
 begin
   assignfile(fo, fname);
   rewrite(fo);
@@ -228,7 +228,10 @@ begin
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
-      write(fo, Color[i, j]);
+      col := 0;
+      if Color[i, j] <> 0 then
+        col := (Color[i, j] - 1 + PlayersCount - cp) mod PlayersCount + 1;
+      write(fo, col);
       write(fo, Integer(Bases[i, j]));
       write(fo, (Field[i, j] and 8) shr 3);
       write(fo, (Field[i, j] and 4) shr 2);
