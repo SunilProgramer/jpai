@@ -1,11 +1,14 @@
+//todo: rewrite in c++
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 void PrintHelp()
 {
 	printf("Usage: map_random <output_file> <width> <height>\n");
 }
-int main( int argc, char *argv[])
+int main(int argc, char *argv[])
 {
+	srand(time(NULL));
 	if (argc != 4)
 	{
 		PrintHelp();
