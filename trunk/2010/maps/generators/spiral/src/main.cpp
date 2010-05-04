@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <math.h>
 #include <fstream>
-#include "../../../../ai/inc/cell.h" //!
 using namespace std;
 
 void PrintHelp()
@@ -37,11 +35,11 @@ int main(int argc, char *argv[])
 			int out = 0; 
 			if ( x == y-1 && x < limit)
 				out = rightdown;
-			if ( w - x == h - y && x >= w - limit - ((w%2) || (h%2)))
+			if ( w - x == h - y && y >= h - ceil((double)min(w, h)/2))
 				out = leftup;
 			if ( x == h - y - 1 && x < limit)
 				out = upright;
-			if ( w - x - 1 == y && x >= w - limit - ((w%2) || (h%2)))
+			if ( w - x - 1 == y && y < ceil((double)min(w, h)/2))
 				out = downleft;
 			if (!out)
 			{
