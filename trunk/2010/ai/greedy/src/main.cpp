@@ -40,7 +40,7 @@ int Fill(int x, int y, int dir)
 int Step(int x, int y)
 {
 	if (tmparr[x + w*y].Fixed)
-		return 0;
+		return -1;
 	int tmax_scores = 0;
 	tmax_angle = 0;
 	for (int i = 0; i < 4; i++)
@@ -81,7 +81,7 @@ int main()
 		for (int x = 0; x < w; x++)
 		{
 			int scores = Step(x, y);
-			if (scores > maxscores)
+			if (scores >= maxscores)
 				Store(x, y, scores);
 		}
 	fo<<(rx+1)<<" "<<(ry+1)<<" "<<angle;
