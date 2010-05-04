@@ -30,7 +30,18 @@ struct Cell
 	}
 	int Signature()
 	{
-		return (Player<<6) + (Fixed<<4) + (Up()<<3) + (Right()<<2) + (Down()<<1) + Left();
+		return (Player<<6) + (Fixed<<4) + Value();
+	}
+	int Value()
+	{
+		return (Up()<<3) + (Right()<<2) + (Down()<<1) + Left();
+	}
+	void GetFromInt(int val)
+	{
+		data[0] = val & 8;
+		data[1] = val & 4;
+		data[2] = val & 2;
+		data[3] = val & 1;
 	}
 	void Rotate(int angle)
 	{
