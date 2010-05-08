@@ -101,7 +101,7 @@ begin
     sbExpand.Click();
     sbReset.Click();
   end;
-  DeleteDirectory(AppPath + DirectorySeparator + 'temp', true);
+  pbDrawAreaResize(self);
 end;
 
 
@@ -138,10 +138,11 @@ end;
 
 procedure TfrmMain.pbDrawAreaResize(Sender: TObject);
 begin
-  sbHorizontal.Max := max(0, m.Width*tbScale.Position - pDrawArea.Width);
-  sbVertical.Max := max(0, m.Height*tbScale.Position - pDrawArea.Height);
-  sbHorizontal.PageSize := pbDrawArea.Width;
-  sbVertical.PageSize := pbDrawArea.Height;
+  sbHorizontal.Max := max(0, m.Width*tbScale.Position - pbDrawArea.Width);
+  sbVertical.Max := max(0, m.Height*tbScale.Position - pbDrawArea.Height);
+//  showmessage(inttostr(sbHorizontal.Max));
+//  sbHorizontal.PageSize := max(2(*sbHorizontal.Max div 10*), 1);//pbDrawArea.Width;
+//  sbVertical.PageSize := pbDrawArea.Height;
 end;
 
 procedure TfrmMain.sbAcceptClick(Sender: TObject);
@@ -187,6 +188,7 @@ procedure TfrmMain.sbResetClick(Sender: TObject);
 begin
   m.ResetValues();
   m.StepsLeft := StepsLeft;
+  DeleteDirectory(AppPath + DirectorySeparator + 'temp', true);
   RefreshScores();
   Draw;
 end;
@@ -441,7 +443,7 @@ begin
     if m.Scores2[i] = maxs2 then
       s2 := s2 + ' Player' + IntToStr(i) + ';';
   end;
-  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Влияние: ' +
+  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Захвачено территории: ' +
     IntToStr(maxs2) + ',' + s2);
 end;
 
