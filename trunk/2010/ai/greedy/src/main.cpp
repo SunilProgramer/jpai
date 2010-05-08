@@ -20,9 +20,9 @@ int Fill(int x, int y, int dir)
 	int i = x + w*y;
 	if ((x < 0) || (y < 0) || (x >= w) || (y >= h) || visited[i])
 		return 0;
-	if (tmparr[i].Fixed && tmparr[i].Player != 1)
+	if (tmparr[i].Player > 1)
 		return 0;
-	if (!(tmparr[i].Signature() & dir))
+	if (!(tmparr[i].Value() & dir))
 		return 0;
 	visited[i] = true;
 	int res = tmparr[i].Player != 1;
@@ -39,10 +39,13 @@ int Fill(int x, int y, int dir)
 
 int Step(int x, int y)
 {
-	if (tmparr[x + w*y].Fixed)
+	if (tmparr[x + w*y].Fixed || !tmparr[x + w*y].Value())
 		return -1;
 	int tmax_scores = 0;
 	tmax_angle = 0;
+	int col = tmparr[x + w*y].Player;
+	if (col > 1)
+		tmparr[x + w*y].Player = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		Clear();
@@ -54,6 +57,7 @@ int Step(int x, int y)
 		}
 		tmparr[x + w*y].Rotate(1);
 	}
+	tmparr[x + w*y].Player = col;
 	return tmax_scores;
 }
 
@@ -69,6 +73,7 @@ int main()
 {
 	ifstream fi("input.txt", ios::in);
 	ofstream fo("output.txt", ios::out);
+	ofstream fto("temp.txt", ios::out);
 	int l = 0;
 	fi >> w >> h >> l >> l;
 	tmparr = new Cell[w*h];
@@ -81,11 +86,13 @@ int main()
 		for (int x = 0; x < w; x++)
 		{
 			int scores = Step(x, y);
+			fto << (x+1) << " " << (y+1) << " " << scores << endl;
 			if (scores >= maxscores)
 				Store(x, y, scores);
 		}
 	fo<<(rx+1)<<" "<<(ry+1)<<" "<<angle;
 	fi.close();
 	fo.close();
+	fto.close();
 	return 0;
 }

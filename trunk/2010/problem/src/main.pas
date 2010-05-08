@@ -40,6 +40,7 @@ type
     seStepsCount: TSpinEdit;
     sbAccept: TSpeedButton;
     sbExpand: TSpeedButton;
+    sbDebug: TStatusBar;
     tbMain: TToolBar;
     tbScale: TTrackBar;
     tbStart: TToggleBox;
@@ -49,6 +50,8 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure pbDrawAreaMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
     procedure pbDrawAreaPaint(Sender: TObject);
     procedure pbDrawAreaResize(Sender: TObject);
     procedure sbAcceptClick(Sender: TObject);
@@ -59,6 +62,7 @@ type
     procedure sbStartClick(Sender: TObject);
     procedure sbStepClick(Sender: TObject);
     procedure sbExpandClick(Sender: TObject);
+    procedure tbMainClick(Sender: TObject);
     procedure tbScaleChange(Sender: TObject);
     procedure loadAI(Sender: TObject; var Value: String);
     procedure tbStartChange(Sender: TObject);
@@ -96,6 +100,7 @@ begin
     sbReset.Click();
   end;
   DeleteDirectory(Handler.AppPath + DirectorySeparator + 'temp', true);
+  pbDrawAreaResize(self);
 end;
 
 procedure TfrmMain.AsyncProcess1Terminate(Sender: TObject);
@@ -130,6 +135,16 @@ begin
   Application.ProcessMessages;
 end;
 
+procedure TfrmMain.pbDrawAreaMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  inc(X, sbHorizontal.Position);
+  inc(Y, sbVertical.Position);
+  X := X div tbScale.Position + 1;
+  Y := Y div tbScale.Position + 1;
+  sbDebug.Panels[0].Text := IntToStr(x) + ', ' + IntToStr(y) + ' ' + inttostr(sbHorizontal.Position);
+end;
+
 
 procedure TfrmMain.pbDrawAreaPaint(Sender: TObject);
 begin
@@ -138,10 +153,11 @@ end;
 
 procedure TfrmMain.pbDrawAreaResize(Sender: TObject);
 begin
-  sbHorizontal.Max := max(0, Handler.map.Width*tbScale.Position - pDrawArea.Width);
-  sbVertical.Max := max(0, Handler.map.Height*tbScale.Position - pDrawArea.Height);
-  sbHorizontal.PageSize := pbDrawArea.Width;
-  sbVertical.PageSize := pbDrawArea.Height;
+  sbHorizontal.Max := max(0, Handler.map.Width*tbScale.Position - pbDrawArea.Width);
+  sbVertical.Max := max(0, Handler.map.Height*tbScale.Position - pbDrawArea.Height);
+//  showmessage(inttostr(sbHorizontal.Max));
+//  sbHorizontal.PageSize := max(2(*sbHorizontal.Max div 10*), 1);//pbDrawArea.Width;
+//  sbVertical.PageSize := pbDrawArea.Height;
 end;
 
 procedure TfrmMain.sbAcceptClick(Sender: TObject);
@@ -198,6 +214,11 @@ procedure TfrmMain.sbExpandClick(Sender: TObject);
 begin
   tbScale.Position := min(floor(pbDrawArea.Width/Handler.map.Width), floor(pbDrawArea.Height/Handler.map.Height));
   tbScaleChange(tbScale);
+end;
+
+procedure TfrmMain.tbMainClick(Sender: TObject);
+begin
+
 end;
 
 procedure TfrmMain.tbScaleChange(Sender: TObject);
