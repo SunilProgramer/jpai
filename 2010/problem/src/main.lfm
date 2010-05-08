@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 1091
+  Left = 858
   Height = 600
-  Top = 148
+  Top = 127
   Width = 800
   Caption = 'Pipe Control'
   ClientHeight = 600
@@ -20,6 +20,7 @@ object frmMain: TfrmMain
     Caption = 'tbMain'
     EdgeBorders = [ebBottom]
     TabOrder = 0
+    OnClick = tbMainClick
     object sbStep: TSpeedButton
       Left = 256
       Height = 22
@@ -160,7 +161,7 @@ object frmMain: TfrmMain
   end
   object gbPlayers: TGroupBox
     Left = 615
-    Height = 576
+    Height = 556
     Top = 24
     Width = 185
     Align = alRight
@@ -169,44 +170,45 @@ object frmMain: TfrmMain
   end
   object pDrawArea: TPanel
     Left = 0
-    Height = 576
+    Height = 556
     Top = 24
     Width = 615
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pDrawArea'
-    ClientHeight = 576
+    ClientHeight = 556
     ClientWidth = 615
     TabOrder = 2
     object pbDrawArea: TPaintBox
       Left = 0
-      Height = 559
+      Height = 539
       Top = 0
       Width = 598
       Align = alClient
+      OnMouseMove = pbDrawAreaMouseMove
       OnPaint = pbDrawAreaPaint
       OnResize = pbDrawAreaResize
     end
     object sbHorizontal: TScrollBar
       Left = 0
       Height = 17
-      Top = 559
+      Top = 539
       Width = 615
       Align = alBottom
       Max = 0
-      PageSize = 200
+      PageSize = 1
       TabOrder = 0
       OnChange = pbDrawAreaPaint
     end
     object sbVertical: TScrollBar
       Left = 598
-      Height = 559
+      Height = 539
       Top = 0
       Width = 17
       Align = alRight
       Kind = sbVertical
       Max = 0
-      PageSize = 200
+      PageSize = 1
       TabOrder = 1
       OnChange = pbDrawAreaPaint
     end
@@ -224,6 +226,18 @@ object frmMain: TfrmMain
     NumGlyphs = 0
     Align = alCustom
     TabOrder = 3
+    Visible = False
+  end
+  object sbDebug: TStatusBar
+    Left = 0
+    Height = 20
+    Top = 580
+    Width = 800
+    Panels = <    
+      item
+        Width = 20
+      end>
+    SimplePanel = False
     Visible = False
   end
   object prAI: TProcess

@@ -47,11 +47,11 @@ struct Cell
 	{
 		for (int i = 0; i < angle; i++)
 		{
-			bool l = Left();
+			bool left = Left();
 			data[3] = data[2];
 			data[2] = data[1];
 			data[1] = data[0];
-			data[0] = l;			
+			data[0] = left;			
 		}
 	}
 };
