@@ -193,7 +193,7 @@ object frmMain: TfrmMain
       Width = 615
       Align = alBottom
       Max = 0
-      PageSize = 200
+      PageSize = 1
       TabOrder = 0
       OnChange = pbDrawAreaPaint
     end
@@ -205,7 +205,7 @@ object frmMain: TfrmMain
       Align = alRight
       Kind = sbVertical
       Max = 0
-      PageSize = 200
+      PageSize = 1
       TabOrder = 1
       OnChange = pbDrawAreaPaint
     end

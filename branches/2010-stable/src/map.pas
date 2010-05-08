@@ -70,7 +70,7 @@ begin
     exit;
   if ((Field[x,y] and z) = 0) then
     exit;
-  if (Bases[x, y]) and (Color[x, y] <> CurrentPlayer) then
+  if (Color[x, y] <> 0) and (Color[x, y] <> CurrentPlayer) then
     exit;
   if (v[x, y]) then
     exit;
@@ -176,9 +176,11 @@ begin
   for i := 0 to w - 1 do
     for j := 0 to h - 1 do
       v[i, j] := false;
+  if c[x, y] <> cp + 1 then
+    c[x, y] := 0;
   sc[cp + 1] := Fill(x, y, 15);
-  logfile.Message('Игрок'+IntToStr(cp + 1) + ' поворачивает сегмент (' + IntToStr(x+1) + ',' +
-    IntToStr(y+1) + ') на ' + IntToStr(d*90)+' градусов и получает ' + IntToStr(sc[cp + 1]) + ' очков.');
+  logfile.Message('Player'+IntToStr(cp + 1) + ' - (' + IntToStr(x+1) + ',' +
+    IntToStr(y+1) + ') - ' + IntToStr(d*90)+' = ' + IntToStr(sc[cp + 1]));
   b[x, y] := true;
   cp := (cp + 1) mod PlayersCount;
 end;
