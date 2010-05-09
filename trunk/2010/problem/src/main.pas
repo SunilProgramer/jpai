@@ -195,7 +195,7 @@ procedure TfrmMain.sbResetClick(Sender: TObject);
 begin
   Handler.Refresh();
   RefreshScores();
-  DeleteDirectory(AppPath + DirectorySeparator + 'temp', true);
+  DeleteDirectory(Handler.AppPath + DirectorySeparator + 'temp', true);
   Draw;
 end;
 
@@ -439,7 +439,7 @@ begin
     if Influence[i] = maxs2 then
       s2 := s2 + ' Player' + IntToStr(i) + ';';
   end;
-  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Влияние: ' +
+  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Захвачено территории: ' +
     IntToStr(maxs2) + ',' + s2);
 end;
 
