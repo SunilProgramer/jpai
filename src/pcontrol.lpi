@@ -8,7 +8,7 @@
       <TargetFileExt Value=".exe"/>
       <Icon Value="0"/>
       <UseXPManifest Value="True"/>
-      <ActiveEditorIndexAtStart Value="0"/>
+      <ActiveEditorIndexAtStart Value="9"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -51,7 +51,7 @@
         <ComponentName Value="frmMain"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="main"/>
-        <CursorPos X="29" Y="142"/>
+        <CursorPos X="59" Y="136"/>
         <TopLine Value="121"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="146"/>
@@ -61,7 +61,7 @@
         <Filename Value="map.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="map"/>
-        <CursorPos X="13" Y="81"/>
+        <CursorPos X="1" Y="88"/>
         <TopLine Value="55"/>
         <EditorIndex Value="9"/>
         <UsageCount Value="146"/>
