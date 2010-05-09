@@ -75,8 +75,8 @@ begin
     exit;
   if (v[x, y]) then
     exit;
-  if c[x, y] <> CurrentPlayer then
-    Result := 1;
+//  if (c[x, y] = CurrentPlayer) or (c[x, y] = 0) then
+  Result := 1;
   c[x, y] := CurrentPlayer;
   v[x, y] := true;
   if (Field[x, y] and 2) <> 0 then

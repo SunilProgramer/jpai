@@ -25,7 +25,7 @@ int Fill(int x, int y, int dir)
 	if (!(tmparr[i].Value() & dir))
 		return 0;
 	visited[i] = true;
-	int res = tmparr[i].Player != 1;
+	int res = 1;//tmparr[i].Player > 1;
 	if (tmparr[i].Up())
 		res += Fill(x, y - 1, 2);
 	if (tmparr[i].Left())
