@@ -191,9 +191,9 @@ var
 begin
   Result := -1;
   sc[cp + 1] := 0;
-  if (((x < 1) or (x > w)) or
+  if ((((x < 1) or (x > w)) or
      ((y < 1) or (y > h))) or
-       (c[x - 1, y - 1] <> 0)
+       (c[x - 1, y - 1] <> 0)) or ((d < 0) or (d > mv))
     then
   begin
 //    cp := (cp + 1) mod PlayersCount;
@@ -208,8 +208,6 @@ begin
         v[i, j] := false;
   end;
 
-  if c[x, y] <> 0 then
-    exit;
   vt[x, y] := d;
   //do: decrement count of d cards
 
