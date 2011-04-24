@@ -188,7 +188,7 @@ begin
   end;
   dec(x);
   dec(y);
-  d := max(d, mv);
+  d := min(d, mv);
 
   vt[x, y] := d;
   //do: decrement count of d cards

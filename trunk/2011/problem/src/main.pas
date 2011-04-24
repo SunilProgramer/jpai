@@ -21,7 +21,7 @@ type
     procedure FinishStep(); override;
     procedure Redraw(); override;
     procedure ShowFinalMessage(); override;
-    procedure SetEnabled(enbl: Boolean); override;
+    //procedure SetEnabled(enbl: Boolean); override;
   end;
 
   { TfrmMain }
@@ -491,7 +491,7 @@ begin
     IntToStr(maxs2) + ',' + s2);
 end;
 
-procedure TPipeAIHandler.SetEnabled(enbl: Boolean);
+{procedure TPipeAIHandler.SetEnabled(enbl: Boolean);
 begin
   inherited SetEnabled(enbl);
   if (not FRunning) and (Enabled) then
@@ -502,7 +502,7 @@ begin
   end
   else
     frmMain.Disable();
-end;
+end;  }
 
 initialization
   {$I main.lrs}
