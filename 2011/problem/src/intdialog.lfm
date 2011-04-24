@@ -1,0 +1,38 @@
+object frmIntDialog: TfrmIntDialog
+  Left = 961
+  Height = 50
+  Top = 322
+  Width = 158
+  Caption = 'Select Value'
+  ClientHeight = 50
+  ClientWidth = 158
+  OnClose = FormClose
+  LCLVersion = '0.9.30'
+  object Button1: TButton
+    Left = 0
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Ok'
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 80
+    Height = 25
+    Top = 24
+    Width = 75
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object seVal: TSpinEdit
+    Left = 0
+    Height = 21
+    Top = 0
+    Width = 154
+    MaxValue = 1000
+    TabOrder = 0
+  end
+end
