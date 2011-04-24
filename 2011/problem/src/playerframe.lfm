@@ -30,6 +30,7 @@ object fPlayer: TfPlayer
     NumGlyphs = 0
     Align = alCustom
     AutoSize = False
+    Enabled = False
     Font.Style = [fsBold]
     MaxLength = 0
     ParentFont = False
@@ -62,7 +63,9 @@ object fPlayer: TfPlayer
     Top = 0
     Width = 48
     Caption = 'Игрок'
+    Checked = True
     OnChange = cbPlayerChange
+    State = cbChecked
     TabOrder = 2
   end
 end
