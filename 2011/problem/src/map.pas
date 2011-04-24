@@ -75,28 +75,39 @@ begin
   if ((x < 0) or (x >= w)) or
      ((y < 0) or (y >= h)) then
     exit;
-  if (c[x,y] <> 0) and (z = 1) then
+  if (v[x, y]) then
     exit;
-  if (z = 0) then
+  if (c[x, y] = CurrentPlayer) and (z = 2) then
+    exit;
+  if (z < 2) then
   begin
-    if (c[x, y] = CurrentPlayer) then
-        vt[x, y] := vt[x, y] + 1
+    if (c[x, y] = CurrentPlayer) and (z = 1) then
+    begin
+        vt[x, y] := vt[x, y] + 1;
+        v[x, y] := true;
+    end
     else
-        if (vt[x, y]< d) and (c[x, y] > 0) then
+        if (((vt[x, y]< d) and (c[x, y] <> CurrentPlayer)) and (c[x,y] <> 0)) and not (v[x, y]) then
         begin
            c[x, y] := CurrentPlayer;
            Result := Result + 1;
-        end;
-    exit;
+           v[x, y] := true;
+        end
+        else
+            exit;
   end
   else
+  begin
     c[x, y] := CurrentPlayer;
-  Result := Result + Fill(x - 1, y, d, 0);
-  Result := Result + Fill(x + 1, y, d, 0);
-  Result := Result + Fill(x - 1 + y mod 2, y - 1, d, 0);
-  Result := Result + Fill(x + y mod 2, y - 1, d, 0);
-  Result := Result + Fill(x - 1 + y mod 2, y + 1, d, 0);
-  Result := Result + Fill(x + y mod 2, y + 1, d, 0);
+    v[x, y] := true;
+  end;
+  d := vt[x, y];
+  Result := Result + Fill(x - 1, y, d, z-1);
+  Result := Result + Fill(x + 1, y, d, z-1);
+  Result := Result + Fill(x - 1 + y mod 2, y - 1, d, z-1);
+  Result := Result + Fill(x + y mod 2, y - 1, d, z-1);
+  Result := Result + Fill(x - 1 + y mod 2, y + 1, d, z-1);
+  Result := Result + Fill(x + y mod 2, y + 1, d, z-1);
 end;
 
 function TMap.GetCP: Integer;
@@ -132,6 +143,7 @@ begin
   for i := 0 to 10 do
   begin
     s2[i] := 0;
+    s1[i] := 0;
     inc(s1[i], sc[i]);
     sc[i] := 0;
   end;
@@ -140,8 +152,9 @@ begin
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
-      //inc(s1[c[i,j]]);
-      //inc(s2[c[i,j]]);
+      inc(s1[c[i,j]]);
+      sc[c[i,j]] := s1[c[i,j]];
+      inc(s2[c[i,j]]);
       if (c[i, j] <> 0) then
         inc(s);
     end;
@@ -189,11 +202,16 @@ begin
   dec(x);
   dec(y);
   d := min(d, mv);
+  for i := 0 to w - 1 do
+  begin
+      for j := 0 to h - 1 do
+        v[i, j] := false;
+  end;
 
   vt[x, y] := d;
   //do: decrement count of d cards
 
-  i := Fill(x, y, d, 1);
+  i := Fill(x, y, d, 2);
   logfile.Message('Player'+IntToStr(cp + 1) + ' - (' + IntToStr(x+1) + ',' +
     IntToStr(y+1) + ') - ' + IntToStr(d)+' = '+inttostr(i));
   b[x, y] := true;
