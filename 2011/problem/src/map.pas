@@ -83,7 +83,7 @@ begin
   begin
     if (c[x, y] = CurrentPlayer) and (z = 1) then
     begin
-        vt[x, y] := vt[x, y] + 1;
+        vt[x, y] := min(vt[x, y] + 1, mv);
         v[x, y] := true;
     end
     else
@@ -208,13 +208,14 @@ begin
         v[i, j] := false;
   end;
 
+  if c[x, y] <> 0 then
+    exit;
   vt[x, y] := d;
   //do: decrement count of d cards
 
   i := Fill(x, y, d, 2);
   logfile.Message('Player'+IntToStr(cp + 1) + ' - (' + IntToStr(x+1) + ',' +
     IntToStr(y+1) + ') - ' + IntToStr(d)+' = '+inttostr(i));
-  b[x, y] := true;
   //cp := (cp + 1) mod PlayersCount;
 end;
 
@@ -269,24 +270,20 @@ var
 begin
   assignfile(fo, fname);
   rewrite(fo);
-  writeln(fo, w, ' ', h, ' ', p, ' ', l-1);
-{  for j := 0 to h - 1 do
+  writeln(fo, w, ' ', h, ' ', mv, ' ', 0);
+  for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
       col := 0;
       if Color[i, j] <> 0 then
         col := (Color[i, j] - 1 + PlayersCount - cp) mod PlayersCount + 1;
-      write(fo, col);
-      write(fo, Integer(Bases[i, j]));
-      write(fo, (Field[i, j] and 8) shr 3);
-      write(fo, (Field[i, j] and 4) shr 2);
-      write(fo, (Field[i, j] and 2) shr 1);
-      write(fo, Field[i, j] and 1);
+      write(fo, col, ' ');
+      write(fo, Influence[i, j], '  ');
       if (i <> w - 1) then
         write(fo, ' ')
       else
         writeln(fo);
-    end;}
+    end;
   closefile(fo);
 end;
 

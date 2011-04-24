@@ -297,6 +297,7 @@ begin
   SetLength(p, count + 1);
   p[count] := TPLayer.Create(count + 1, AI, TWinControl(owner));
   p[count].frm.fneAI.OnAcceptFileName := p[0].frm.fneAI.OnAcceptFileName;
+  p[count].frm.Top := (count + 1)*p[count].frm.Height;
   inc(count);
   m.PlayersCount := count;
   Result := true;
@@ -377,8 +378,8 @@ begin
   num := n;
   frm := TfPlayer.Create(Parent);
   frm.Parent := Parent;
+//  frm.Top := MaxInt;
   frm.Align := alTop;
-  frm.Top := MaxInt;
   frm.Name := frm.Name + IntToStr(n);
   frm.fneAI.Font.Color := PLAYER_COLORS[n];
   frm.fneAI.InitialDir := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'ai';
