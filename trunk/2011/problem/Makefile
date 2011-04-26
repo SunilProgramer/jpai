@@ -1,8 +1,8 @@
 all:
-	lazbuild src/pcontrol.lpi
+	lazbuild src/proximity.lpi
 
 clean:
-	rm -f bin/PipeControl.exe
+	rm -f bin/Proximity.exe
 	rm -f obj/*
 	
 distclean: clean
