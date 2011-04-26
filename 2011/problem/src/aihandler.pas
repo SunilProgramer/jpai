@@ -159,8 +159,12 @@ begin
       exit;
   end
   else
-      if p[player].frm.cbPlayer.Checked then
-         Redraw();
+      for i := 0 to PlayersCount-1 do
+          if p[i].frm.cbPlayer.Checked then
+          begin
+             Redraw();
+             break;
+          end;
   BeginAI();
 end;
 
