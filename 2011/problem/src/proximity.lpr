@@ -1,4 +1,4 @@
-program pcontrol;
+program proximity;
 
 {$mode objfpc}{$H+}
 
@@ -7,16 +7,15 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, main, LResources, map, playerframe, aihandler, log, intdialog
+  Forms, main, map, playerframe, aihandler, log, intdialog
   { you can add units after this };
 
-{$IFDEF WINDOWS}{$R pcontrol.rc}{$ENDIF}
+
+{$R *.res}
 
 begin
-  {$I pcontrol.lrs}
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmIntDialog, frmIntDialog);
   Application.Run;
 end.
-
