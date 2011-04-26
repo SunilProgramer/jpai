@@ -72,7 +72,7 @@ type
     procedure tbStartChange(Sender: TObject);
     procedure tTerminateTimerTimer(Sender: TObject);
    private
-    { Private declarations }
+     CurrentX, currentY: Integer;
    public
      Handler: TPipeAIHandler;
      executing: Boolean;
@@ -124,6 +124,8 @@ var
 begin
   Handler := TPipeAIHandler.Create(gbPlayers);
   Handler.AcceptEvent := fneTmp.OnAcceptFileName;
+  CurrentX := -1;
+  CurrentY := -1;
   Handler.FRunning := false;
 
   fneMap.InitialDir := Handler.AppPath + DirectorySeparator + 'maps';
@@ -145,11 +147,22 @@ end;
 procedure TfrmMain.pbDrawAreaMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
-  inc(X, sbHorizontal.Position);
-  inc(Y, sbVertical.Position);
-  X := X div tbScale.Position + 1;
-  Y := Y div tbScale.Position + 1;
-  sbDebug.Panels[0].Text := IntToStr(x) + ', ' + IntToStr(y) + ' ' + inttostr(sbHorizontal.Position);
+  if Handler.Manual then
+  begin
+    inc(X, sbHorizontal.Position);
+    inc(Y, sbVertical.Position);
+    Y := max(min(Y div tbScale.Position, Handler.Map.Height - 1), 0);
+    if y mod 2 <> 0 then
+       X := X - tbScale.Position div 2;
+    X := max(min(X div tbScale.Position, Handler.Map.Width - 1), 0);
+
+    if (X <> CurrentX) or (Y <> CurrentY) then
+    begin
+      CurrentX := x;
+      CurrentY := y;
+      Draw;
+    end;
+  end;
 end;
 
 procedure TfrmMain.pbDrawAreaMouseUp(Sender: TObject; Button: TMouseButton;
@@ -161,21 +174,17 @@ begin
   begin
     inc(X, sbHorizontal.Position);
     inc(Y, sbVertical.Position);
-    Y := Y div tbScale.Position + 1;
+    Y := max(min(Y div tbScale.Position + 1, Handler.Map.Height), 1);
     if y mod 2 = 0 then
-       X := max(X - tbScale.Position div 2, 0);
-    X := X div tbScale.Position + 1;
-    rs := frmIntDialog.ShowModal;
-    if rs = 1 then
-    begin
-      assignfile(output, Handler.RunDirectory + DirectorySeparator + 'output.txt');
-      rewrite(output);
-      writeln(x);
-      writeln(y);
-      writeln(frmIntDialog.seVal.Value);
-      closefile(output);
-      Handler.ManualEndAI;
-    end;
+       X := X - tbScale.Position div 2;
+    X := max(min(X div tbScale.Position + 1, Handler.Map.Width), 1);
+    //
+    assignfile(output, Handler.RunDirectory + DirectorySeparator + 'output.txt');
+    rewrite(output);
+    writeln(x);
+    writeln(y);
+    closefile(output);
+    Handler.ManualEndAI;
   end;
 end;
 
@@ -326,6 +335,8 @@ begin
     //c.MoveTo(x1, y1);
   end;
   str := IntToStr(Handler.Map.Influence[x, y]);
+  if (Handler.Manual and ((CurrentX = x) and (CurrentY = y))) and (str = '0') then
+     str := IntToStr(Handler.Map.NextNumber);
   c.Brush.Style := bsClear;
   c.Font.Height := round(radius * 0.8);
   c.TextOut(xo + (cellsize - c.TextWidth(str)) div 2,
@@ -477,17 +488,17 @@ begin
   s2 := '';
   for i := 1 to PlayersCount do
   begin
-    maxs1 := max(maxs1, Scores[i]);
-    maxs2 := max(maxs2, Influence[i]);
+    maxs1 := max(maxs1, Map.Scores2[i]);
+    maxs2 := max(maxs2, Map.Scores1[i]);
   end;
   for i := 1 to PlayersCount do
   begin
-    if Scores[i] = maxs1 then
+    if Map.Scores2[i] = maxs1 then
       s1 := s1 + ' Player' + IntToStr(i) + ';';
-    if Influence[i] = maxs2 then
+    if Map.Scores1[i] = maxs2 then
       s2 := s2 + ' Player' + IntToStr(i) + ';';
   end;
-  ShowMessage('1. Очки: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Захвачено территории: ' +
+  ShowMessage('1. Численность: '+IntToStr(maxs1) + ',' + s1 + #10 + '2. Захвачено территории: ' +
     IntToStr(maxs2) + ',' + s2);
 end;
 

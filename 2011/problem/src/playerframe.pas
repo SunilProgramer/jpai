@@ -15,6 +15,7 @@ type
     Bevel1: TBevel;
     cbPlayer: TCheckBox;
     fneAI: TFileNameEdit;
+    leArmy: TLabeledEdit;
     leInfluence: TLabeledEdit;
     procedure cbPlayerChange(Sender: TObject);
   private
