@@ -327,7 +327,8 @@ begin
   m.CalculateScores();
   for i := 0 to PlayersCount - 1 do
   begin
-    p[i].Form.leInfluence.Text := inttostr(Influence[i + 1]);
+    p[i].Form.leInfluence.Text := inttostr(m.Scores1[i + 1]);
+    p[i].Form.leArmy.Text := inttostr(m.Scores2[i + 1]);
   end;
 end;
 

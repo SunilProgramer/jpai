@@ -38,14 +38,14 @@ object fPlayer: TfPlayer
   object leInfluence: TLabeledEdit
     Left = 0
     Height = 24
-    Top = 64
+    Top = 104
     Width = 181
     Color = clForm
     EditLabel.AnchorSideLeft.Control = leInfluence
     EditLabel.AnchorSideBottom.Control = leInfluence
     EditLabel.Left = 0
     EditLabel.Height = 14
-    EditLabel.Top = 47
+    EditLabel.Top = 87
     EditLabel.Width = 118
     EditLabel.Caption = 'Захвачено территории'
     EditLabel.ParentColor = False
@@ -64,5 +64,26 @@ object fPlayer: TfPlayer
     Caption = 'Игрок'
     OnChange = cbPlayerChange
     TabOrder = 2
+  end
+  object leArmy: TLabeledEdit
+    Left = 0
+    Height = 24
+    Top = 64
+    Width = 181
+    Color = clForm
+    EditLabel.AnchorSideLeft.Control = leArmy
+    EditLabel.AnchorSideBottom.Control = leArmy
+    EditLabel.Left = 0
+    EditLabel.Height = 14
+    EditLabel.Top = 47
+    EditLabel.Width = 66
+    EditLabel.Caption = 'Численность'
+    EditLabel.ParentColor = False
+    Font.Height = 16
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 3
+    Text = '0'
   end
 end

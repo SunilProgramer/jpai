@@ -14,8 +14,10 @@ int main(int argc, char *argv[])
 	ifstream fi("input.txt", ios::in);
 	ofstream fo("output.txt", ios::out);
 	int w, h, mv, n;
-	fi >> w >> h >> mv >> n;
+	fi >> w >> h >> n;
 	TPoint *tmparr = new TPoint[w*h];
+	for (int i = 0; i < n; i++)
+		fi >> mv;
 	n = 0;
 	for (int y = 0; y < h; y++)
 	{
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
 	srand(tmp);
 	if (n != 0)
 		n = rand()%n;
-	fo << tmparr[n].x << " " << tmparr[n].y << " " << (rand()%mv + 1);
+	fo << tmparr[n].x << " " << tmparr[n].y;
 	delete[] tmparr;
 	fi.close();
 	fo.close();
