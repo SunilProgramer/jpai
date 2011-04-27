@@ -197,8 +197,6 @@ begin
 end;
 
 procedure TAIHandler.SetState(run: Boolean);
-var
-  i: Integer;
 begin
   running := run;
   if run then

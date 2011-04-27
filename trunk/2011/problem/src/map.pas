@@ -180,7 +180,7 @@ end;
 
 function TMap.Step(x, y: Integer): Integer;
 var
-  i, j: integer;
+  i: integer;
 begin
   Result := -1;
   sc[cp + 1] := 0;
@@ -276,7 +276,7 @@ end;
 procedure TMap.ProcessAIOutput(fname: string; id: Integer);
 var
   fi: TextFile;
-  x, y, d: Integer;
+  x, y: Integer;
 begin
   if not FileExists(fname) then
      exit;
