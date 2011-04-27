@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Height = 600
   Top = 127
   Width = 800
-  Caption = 'Pipe Control'
+  Caption = 'Proximity'
   ClientHeight = 600
   ClientWidth = 800
   OnCloseQuery = FormCloseQuery

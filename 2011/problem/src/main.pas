@@ -167,8 +167,6 @@ end;
 
 procedure TfrmMain.pbDrawAreaMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
-var
-   rs: Integer;
 begin
   if Handler.Manual then
   begin
@@ -310,15 +308,12 @@ end;
 procedure TfrmMain.DrawSegment(x, y: Integer; C: TCanvas);
 var
   xo, yo, x1, y1, i: Integer;
-  iRect: TRect;
-  cl, cl1: TColor;
-  cellsize, pipesize, radius: integer;
+  cellsize, radius: integer;
   str: String;
 begin
   if (x >= Handler.map.Width) or (y >= Handler.map.Height) then
     exit;
   cellsize := tbScale.Position;
-  pipesize := Round(sqrt(cellsize));
   radius := round(cellsize/(2*sin(pi/6)));
   xo := x*tbScale.Position - sbHorizontal.Position + (cellsize div 2)*(y mod 2);
   yo := y*tbScale.Position - sbVertical.Position;// div 2;
@@ -347,7 +342,7 @@ end;
 procedure TfrmMain.RefreshScores();
 begin
   sbStep.Caption := 'Ход ' + IntToStr(Handler.map.StepsPassed);
-  Caption := 'Pipe Control "'+ExtractFileName(fneMap.FileName)+'" '+
+  Caption := 'Proximity "'+ExtractFileName(fneMap.FileName)+'" '+
     IntToStr(Handler.map.Width) + 'x' + IntToStr(Handler.map.Height) + ', ' + IntToStr(Handler.PlayersCount) +
     ' players. Step ' + IntToStr(Handler.map.StepsPassed) + '/' + IntToStr(Handler.StepsLeft);
 end;
