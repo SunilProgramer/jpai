@@ -255,7 +255,6 @@ object frmMain: TfrmMain
   end
   object tTerminateTimer: TTimer
     Enabled = False
-    Interval = 3000
     OnTimer = tTerminateTimerTimer
     left = 30
     top = 49
