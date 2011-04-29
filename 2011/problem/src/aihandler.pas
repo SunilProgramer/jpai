@@ -12,7 +12,7 @@ const
   PLAYER_COLORS: array[0..9] of TColor = (clBlack, clRed, clBlue, clGreen, clYellow, clMaroon, clLime, clAqua, clPurple, clTeal);
   min_count = 2;
   max_count = 9;
-  AllowedWorkTime = 3000;
+  AllowedWorkTime = 1000;
   DefaultAI = 'random';
   AIExecutable = 'ai';
 
