@@ -253,7 +253,7 @@ var
 begin
   assignfile(fo, fname);
   rewrite(fo);
-  writeln(fo, w, ' ', h, ' ', wsz);
+  writeln(fo, w, ' ', h, ' ', wsz, ' ', PlayersCount);
   for i := 0 to wsz-1 do
       write(fo, seq[CurrentPlayer, (StepsPassed + i) mod seqsz], ' ');
   writeln(fo);
