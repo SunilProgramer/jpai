@@ -310,6 +310,7 @@ var
   xo, yo, x1, y1, i: Integer;
   cellsize, radius: integer;
   str: String;
+  pts: array[0..10] of TPoint;
 begin
   if (x >= Handler.map.Width) or (y >= Handler.map.Height) then
     exit;
@@ -318,11 +319,19 @@ begin
   xo := x*tbScale.Position - sbHorizontal.Position + (cellsize div 2)*(y mod 2);
   yo := y*tbScale.Position - sbVertical.Position;// div 2;
 
-  C.FillRect(Rect(xo, yo, xo+cellsize,yo+cellsize));
+  if c.Brush.Color <> clWhite then
+  begin
+    for i := 0 to 7 do
+    begin
+        pts[i].x := round(xo + cellsize/2 + (radius/2)*cos(i*pi/3 + pi/6));
+        pts[i].y := round(yo +cellsize/2 - (radius/2)*sin(i*pi/3 + pi/6));
+    end;
+    c.Polygon(pts, 8);
+  end;
 
   Handler.map.Field[x,y];
   c.MoveTo(xo + cellsize div 2, yo);
-  for i := 1 to 8 do
+  for i := 1 to 7 do
   begin
     x1 := round(xo + cellsize/2 + (radius/2)*cos(i*pi/3 + pi/6));
     y1 := round(yo +cellsize/2 - (radius/2)*sin(i*pi/3 + pi/6));
@@ -332,11 +341,14 @@ begin
   str := IntToStr(Handler.Map.Influence[x, y]);
   if (Handler.Manual and ((CurrentX = x) and (CurrentY = y))) and (str = '0') then
      str := IntToStr(Handler.Map.NextNumber);
-  c.Brush.Style := bsClear;
-  c.Font.Height := round(radius * 0.8);
-  c.TextOut(xo + (cellsize - c.TextWidth(str)) div 2,
-  yo + (cellsize - c.TextHeight(str)) div 2, str);
-  c.Brush.Style := bsSolid;
+  if (str <> '0') then
+  begin
+    c.Brush.Style := bsClear;
+    c.Font.Height := round(radius * 0.8);
+    c.TextOut(xo + (cellsize - c.TextWidth(str)) div 2,
+    yo + (cellsize - c.TextHeight(str)) div 2, str);
+    c.Brush.Style := bsSolid;
+  end;
 end;
 
 procedure TfrmMain.RefreshScores();
