@@ -231,7 +231,8 @@ begin
   ResetValues();
   for i := 1 to 10 do
       for j := 0 to seqsz - 1 do
-            read(fi, seq[i, j]);
+            read(fi, seq[i, min(j, MAX_SIZE - 1)]);
+  seqsz := min(seqsz, MAX_SIZE);
   for j := 0 to h - 1 do
     for i := 0 to w - 1 do
     begin
@@ -276,14 +277,36 @@ end;
 procedure TMap.ProcessAIOutput(fname: string; id: Integer);
 var
   fi: TextFile;
-  x, y: Integer;
+  x, y, i, j: Integer;
+  s, rs: string;
 begin
   if not FileExists(fname) then
      exit;
   assignfile(fi, fname);
   reset(fi);
+  rs := '';
   try
-    read(fi, x, y);
+    while not eof(fi) do
+    begin
+      readln(fi, s);
+      rs := rs + s + ' ';
+    end;
+    i := 1;
+    while (rs[i] in ['0'..'9']) and (i < length(rs))  do
+          inc(i);
+    s := copy(rs, 1, i - 1);
+    if (not TryStrToInt(s, x)) or (i = length(s)) then
+      exit;
+    j := i;
+    while ((rs[j] = ' ') or (rs[j] = #9)) and (j < length(rs)) do
+          inc(j);
+    i := j;
+    while (rs[i] in ['0'..'9']) and (i < length(rs))  do
+          inc(i);
+    s := copy(rs, j, i - j);
+    if (not TryStrToInt(s, y)) or
+       (not (rs[i] = ' ') and not (rs[i] = #9)) then
+      exit;
     Step(x, y);
   finally
     closefile(fi);

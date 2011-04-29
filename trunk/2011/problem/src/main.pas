@@ -265,8 +265,8 @@ end;
 
 procedure TfrmMain.tbScaleChange(Sender: TObject);
 begin
-  sbHorizontal.Max := max(0, Handler.map.Width*tbScale.Position - pDrawArea.Width);
-  sbVertical.Max := max(0, Handler.map.Height*tbScale.Position - pDrawArea.Height);
+  sbHorizontal.Max := max(0, (Handler.map.Width + 1)*tbScale.Position - pDrawArea.Width);
+  sbVertical.Max := max(0, (Handler.map.Height + 1)*tbScale.Position - pDrawArea.Height);
   Draw;
 end;
 
