@@ -6,8 +6,8 @@ int main(int argc, char *argv[])
 {
 	ifstream fi("input.txt", ios::in);
 	ofstream fo("output.txt", ios::out);
-	int w, h, mv, n;
-	fi >> w >> h >> n;
+	int w, h, mv, n, t;
+	fi >> w >> h >> n >> t;
 	for (int i = 0; i < n; i++)
 		fi >> mv;
 	for (int y = 0; y < h; y++)
