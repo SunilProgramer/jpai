@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 	int tmp = time(NULL);
 	ifstream fi("input.txt", ios::in);
 	ofstream fo("output.txt", ios::out);
-	int w, h, mv, n, t;
-	fi >> w >> h >> n >> t;
+	int w, h, mv, n;
+	fi >> w >> h >> n >> mv;
 	TPoint *tmparr = new TPoint[w*h];
 	for (int i = 0; i < n; i++)
 		fi >> mv;
