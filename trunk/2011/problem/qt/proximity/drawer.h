@@ -12,6 +12,8 @@ public:
     QPainter painter;
     float Zoom;
     float ox, oy, MapWidth, MapHeight;
+    int sx, sy;
+    bool DragStarted;
 protected:
     void resizeGL(int w, int h);
     void initializeGL();
@@ -19,6 +21,7 @@ protected:
     void paintGL();
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
 signals:
 
