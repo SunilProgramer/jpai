@@ -2,6 +2,10 @@
 #include <algorithm>
 using namespace std;
 
+Drawer::Drawable::Drawable(bool createdDynamically): CreatedDynamically(createdDynamically)
+{
+}
+
 Drawer::Drawer(QWidget *parent) :
     QGLWidget(parent)
 {
@@ -11,6 +15,23 @@ Drawer::Drawer(QWidget *parent) :
     oy = 0; // remove this stuff
     DragStarted = false;
 
+}
+
+Drawer::~Drawer()
+{
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+        if ((*i)->CreatedDynamically)
+            delete (*i);
+}
+
+void Drawer::Add(Drawable *obj)
+{
+    objects.append(obj);
+}
+
+Drawer::Drawable *Drawer::Get(const int &ind)
+{
+    return objects[ind];
 }
 
 void Drawer::resizeGL(int w, int h)
@@ -27,7 +48,12 @@ void Drawer::resizeGL(int w, int h)
 
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
-    Zoom = min(width()/MapWidth, height()/MapHeight);//only on init!
+    QRectF r;
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+        r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
+    Zoom = min(width()/r.width(), height()/r.height());
+    ox = r.left();
+    oy = r.top();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -51,27 +77,20 @@ void Drawer::paintGL()
 {
     if (DragStarted)
     {
-    QPoint p = mapFromGlobal(QCursor::pos());
-    ox += (p.x() - sx)/Zoom;
-    oy += (p.y() - sy)/Zoom;
-    sx = p.x();
-    sy = p.y();
+        QPoint p = mapFromGlobal(QCursor::pos());
+        ox += (p.x() - sx)/Zoom;
+        oy += (p.y() - sy)/Zoom;
+        sx = p.x();
+        sy = p.y();
     }
-         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glLoadIdentity();
-        glScalef(Zoom, Zoom, 1.0f);
-        glTranslatef(ox, oy, 0.0f);
-        glLineWidth(3);
-        for (int i = 0; i < MapWidth; i++)
-            for (int j = 0; j < MapHeight; j++)
-            {
-                glBegin(GL_LINE_LOOP);
-                for (int k = 0; k < 6; k++)
-                {
-                    glVertex3f( i + 0.5f*(1+j%2) + 0.5f*sin((float)3.1416*k/3.0f), j + 0.5f + 0.5f*cos((float)3.1416*k/3.0f), 0.0f);//define pi
-                }
-                glEnd();
-            }
+    QRect r(ox*Zoom, oy*Zoom, width(), height());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glScalef(Zoom, Zoom, 1.0f);
+    glTranslatef(ox, oy, 0.0f);
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+        (*i)->Draw(this);
+
 //                glColor3f(1.0f, 0,0);
 //                glColor3f(0, 1.0f,0);
 //                glVertex3f(MapWidth, 0, 0.0f);
@@ -123,10 +142,14 @@ void Drawer::mouseMoveEvent(QMouseEvent *event)
 
 void Drawer::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::MiddleButton) // Reset zoom
+    if (event->button() == Qt::MidButton) // Reset zoom
     {
-        ox = oy = 0.0f;
-        Zoom = min(width()/MapWidth, height()/MapHeight);
+        QRectF r;
+        for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+            r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
+        Zoom = min(width()/r.width(), height()/r.height());
+        ox = r.left();
+        oy = r.top();
         updateGL();
     }
     if (event->button() != Qt::LeftButton || !DragStarted)
