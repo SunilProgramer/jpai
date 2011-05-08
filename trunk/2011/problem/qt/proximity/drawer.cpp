@@ -1,8 +1,13 @@
 #include "drawer.h"
 #include <algorithm>
+#include <QFont>
 using namespace std;
 
-Drawer::Drawable::Drawable(bool createdDynamically): CreatedDynamically(createdDynamically)
+Drawer::Drawable::Drawable(bool createdDynamically): CreatedDynamically(createdDynamically), Updated(true), Deleted(false)
+{
+}
+
+void Drawer::Drawable::CalculateBBox()
 {
 }
 
@@ -14,6 +19,7 @@ Drawer::Drawer(QWidget *parent) :
     ox = 0;
     oy = 0; // remove this stuff
     DragStarted = false;
+    QTimer::singleShot(33, this, SLOT(Update()));
 
 }
 
@@ -22,6 +28,19 @@ Drawer::~Drawer()
     for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
         if ((*i)->CreatedDynamically)
             delete (*i);
+}
+
+void Drawer::DrawText(float x, float y, int font_size, QString s)
+{
+    glPushMatrix();
+    glLoadIdentity();
+    QFont f;
+    f.setPixelSize(Zoom*0.5f); // too edgy
+    QFontMetricsF m(f);
+    QRectF r = m.boundingRect(s);
+    glTranslatef((x+ox)*Zoom - r.width()*0.5f - r.left(), (y+oy)*Zoom + r.height() + r.bottom(), -0.2f);
+    renderText(0.0f, 0.0f, 0.0f, s, f);
+    glPopMatrix();
 }
 
 void Drawer::Add(Drawable *obj)
@@ -34,6 +53,16 @@ Drawer::Drawable *Drawer::Get(const int &ind)
     return objects[ind];
 }
 
+void Drawer::Drawable::Update(Drawer *drawer)
+{
+
+}
+
+void Drawer::Drawable::Click(Drawer *drawer, float x, float y)
+{
+
+}
+
 void Drawer::resizeGL(int w, int h)
 {
     h = h?h:!h;
@@ -42,15 +71,20 @@ void Drawer::resizeGL(int w, int h)
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0, w-1.0, h-1.0, 0.0, 10.0, -10.0);
+    glOrtho(0.0f, w - 1.0f, h - 1.0f, 0.0f, 10.0f, -10.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
     QRectF r;
+    mutex.lock();
     for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+    {
+        (*i)->CalculateBBox();
         r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
+    }
+    mutex.unlock();
     Zoom = min(width()/r.width(), height()/r.height());
     ox = r.left();
     oy = r.top();
@@ -88,19 +122,15 @@ void Drawer::paintGL()
     glLoadIdentity();
     glScalef(Zoom, Zoom, 1.0f);
     glTranslatef(ox, oy, 0.0f);
+    mutex.lock();
     for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
         (*i)->Draw(this);
-
-//                glColor3f(1.0f, 0,0);
-//                glColor3f(0, 1.0f,0);
-//                glVertex3f(MapWidth, 0, 0.0f);
-//                glColor3f(0, 0,1.0f);
-//                glVertex3f( MapWidth,MapHeight, 0.0f);
+    mutex.unlock();
 }
 
 void Drawer::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton)
+    if (event->button() != Qt::RightButton)
         return;
     DragStarted = true;
     sx = event->x();
@@ -116,15 +146,14 @@ void Drawer::wheelEvent(QWheelEvent *event)
 {
     QPoint p = mapFromGlobal(QCursor::pos());
     float OldZoom = Zoom;
-    Zoom *= pow(1.1f, event->delta()/120.0f);
-    Zoom = clamp(Zoom, 0.2f, 200.0f);//ZOOM_MIN, ZOOM_MAX);
+    Zoom *= pow(1.2f, event->delta()/120.0f);
+    Zoom = clamp(Zoom, 0.2f, 300.0f);//ZOOM_MIN, ZOOM_MAX);
     if (Zoom == OldZoom)
         return;
     ox = -(p.x() - ox*OldZoom)/OldZoom + p.x()/Zoom;
     oy = -(p.y() - oy*OldZoom)/OldZoom + p.y()/Zoom;
     updateGL();
     event->accept();
-    //oy = - Tempy * (MapHeight * Zoom) + p.y();
 }
 
 void Drawer::mouseMoveEvent(QMouseEvent *event)
@@ -142,17 +171,44 @@ void Drawer::mouseMoveEvent(QMouseEvent *event)
 
 void Drawer::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (event->button() == Qt::LeftButton)
+    {
+        QRectF r;
+        mutex.lock();
+        QList<Drawable*> clicked;
+        for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+        {
+            (*i)->CalculateBBox();
+            r = (*i)->BB;
+            r.setRect((ox + r.left())*Zoom, (oy + r.top())*Zoom, r.width()*Zoom, r.height()*Zoom);
+            if (r.contains(event->pos()))
+            {
+                clicked.push_back(*i);
+            }
+        }
+        mutex.unlock();
+        for (QList<Drawable*>::iterator i = clicked.begin(); i != clicked.end(); ++i)
+        {
+            (*i)->Click(this, event->x()/Zoom - ox, event->y()/Zoom - oy);
+        }
+
+    }
     if (event->button() == Qt::MidButton) // Reset zoom
     {
         QRectF r;
+        mutex.lock();
         for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+        {
+            (*i)->CalculateBBox();
             r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
+        }
+        mutex.unlock();
         Zoom = min(width()/r.width(), height()/r.height());
         ox = r.left();
         oy = r.top();
         updateGL();
     }
-    if (event->button() != Qt::LeftButton || !DragStarted)
+    if (event->button() != Qt::RightButton || !DragStarted)
         return;
     DragStarted = false;
     ox += (event->x() - sx)/Zoom;
@@ -161,4 +217,33 @@ void Drawer::mouseReleaseEvent(QMouseEvent *event)
     event->accept();
 }
 
+void Drawer::Update()
+{
+    bool upd = false;
+    mutex.lock();
+    QList<Drawable*>::iterator j = objects.begin();
+    while (j != objects.end())
+    {
+        if ((*j)->Deleted)
+        {
+            if ((*j)->CreatedDynamically)
+                delete *j;
+            j = objects.erase(j);
+        }
+        else j++;
+    }
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+    {
+        if (!(*i)->Updated)
+        {
+            upd = true;
+            (*i)->Updated = true;
+            (*i)->Update(this);
+        }
+    }
+    mutex.unlock();
+    if (upd)
+        updateGL();
+    QTimer::singleShot(33, this, SLOT(Update()));
+}
 

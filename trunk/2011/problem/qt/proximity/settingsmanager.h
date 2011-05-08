@@ -9,9 +9,10 @@ public:
     static SettingsManager *Instance();
     static void Cleanup();
     QVariant getValue(const QString &key, const QVariant &defaultValue);
+    QVariant getValue(const QString &group, const QString &key, const QVariant &defaultValue);
 private:
     SettingsManager();
-    static SettingsManager *inst;
+    static SettingsManager *instance;
 };
 
 

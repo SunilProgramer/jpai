@@ -1,25 +1,34 @@
 #include "settingsmanager.h"
 #include "definition.h"
 
-SettingsManager *SettingsManager::inst = 0;
+SettingsManager *SettingsManager::instance = 0;
 
 SettingsManager *SettingsManager::Instance()
 {
-    if (!SettingsManager::inst)
-        SettingsManager::inst = new SettingsManager();
-    return SettingsManager::inst;
+    if (!instance)
+        instance = new SettingsManager();
+    return instance;
 }
 
 void SettingsManager::Cleanup()
 {
-    if (SettingsManager::inst)
-        delete SettingsManager::inst; SettingsManager::inst = 0;
+    if (instance)
+        delete instance; instance = 0;
 }
 
 QVariant SettingsManager::getValue(const QString &key, const QVariant &defaultValue)
 {
     QVariant val;
     setValue(key, val = value(key, defaultValue));
+    return val;
+}
+
+QVariant SettingsManager::getValue(const QString &group, const QString &key, const QVariant &defaultValue)
+{
+    QVariant val;
+    beginGroup(group);
+    setValue(key, val = value(key, defaultValue));
+    endGroup();
     return val;
 }
 

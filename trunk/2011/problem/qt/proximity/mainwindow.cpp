@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "directorymanager.h"
 #include "settingsmanager.h"
-#include "map.h"
 #include "hex.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,8 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(ProjectName);
     d = new Drawer(this);
-    Map *m = new Map(true);
-    d->Add(m);
+    map.Load("./maps/test.map");
+    MapDrawer *m = d->Add<MapDrawer>();
+    m->SetMap(map);
+
     d->show();
     ui->glDraw->addWidget(d);
 }
