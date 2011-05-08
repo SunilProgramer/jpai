@@ -14,7 +14,12 @@ SOURCES += main.cpp \
     directorymanager.cpp \
     settingsmanager.cpp \
     map.cpp \
-    hex.cpp
+    hex.cpp \
+    utils.cpp \
+    playercolor.cpp \
+    initmanager.cpp \
+    databasemanager.cpp \
+    particlesystem.cpp
 HEADERS += mainwindow.h \
     definition.h \
     game.h \
@@ -24,5 +29,10 @@ HEADERS += mainwindow.h \
     directorymanager.h \
     settingsmanager.h \
     map.h \
-    hex.h
+    hex.h \
+    utils.h \
+    playercolor.h \
+    initmanager.h \
+    databasemanager.h \
+    particlesystem.h
 FORMS += mainwindow.ui

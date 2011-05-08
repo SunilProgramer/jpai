@@ -2,7 +2,7 @@
 #include "definition.h"
 #include "settingsmanager.h"
 
-DirectoryManager *DirectoryManager::hgffyf = 0;
+DirectoryManager *DirectoryManager::instance = 0;
 
 DirectoryManager::DirectoryManager(): Current(QDir::current())
 {
@@ -31,15 +31,15 @@ DirectoryManager::~DirectoryManager()
 
 DirectoryManager *DirectoryManager::Instance()
 {
-    if (!hgffyf)
-        hgffyf = new DirectoryManager();
-    return hgffyf;
+    if (!instance)
+        instance = new DirectoryManager();
+    return instance;
 }
 
 void DirectoryManager::Cleanup()
 {
-    if (hgffyf)
-        delete hgffyf; hgffyf = 0;
+    if (instance)
+        delete instance; instance = 0;
 }
 
 QDir DirectoryManager::mkdir(const QDir &dir, const QString &name, const QString &val)

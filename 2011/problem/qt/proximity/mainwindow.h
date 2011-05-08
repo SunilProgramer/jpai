@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "definition.h"
 #include "drawer.h"
+#include "map.h"
 
 namespace Ui {
     class MainWindow;
@@ -20,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Drawer *d;
+    Map map;
 };
 
 #endif // MAINWINDOW_H

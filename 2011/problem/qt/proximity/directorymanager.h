@@ -12,7 +12,7 @@ public:
 private:
     DirectoryManager();
     ~DirectoryManager();
-    static DirectoryManager *hgffyf;
+    static DirectoryManager *instance;
     QDir mkdir(const QDir &dir, const QString &name, const QString &val);
     QDir Current;
     QMap<QString, QDir> Dirs;
