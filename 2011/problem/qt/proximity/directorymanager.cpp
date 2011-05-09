@@ -25,6 +25,11 @@ DirectoryManager::DirectoryManager(): Current(QDir::current())
 
 }
 
+QDir DirectoryManager::operator ()(const QString &name)
+{
+    return Dirs[name];
+}
+
 DirectoryManager::~DirectoryManager()
 {
 }

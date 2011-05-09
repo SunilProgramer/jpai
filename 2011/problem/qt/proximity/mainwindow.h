@@ -5,6 +5,7 @@
 #include "definition.h"
 #include "drawer.h"
 #include "map.h"
+#include "initmanager.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,6 +23,7 @@ private:
     Ui::MainWindow *ui;
     Drawer *d;
     Map map;
+    InitManager im;
 };
 
 #endif // MAINWINDOW_H

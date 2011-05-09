@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     playercolor.cpp \
     initmanager.cpp \
     databasemanager.cpp \
-    particlesystem.cpp
+    particlesystem.cpp \
+    directorywatcher.cpp
 HEADERS += mainwindow.h \
     definition.h \
     game.h \
@@ -34,5 +35,6 @@ HEADERS += mainwindow.h \
     playercolor.h \
     initmanager.h \
     databasemanager.h \
-    particlesystem.h
+    particlesystem.h \
+    directorywatcher.h
 FORMS += mainwindow.ui

@@ -101,7 +101,14 @@ void MapDrawer::Draw(Drawer *drawer)
             Hex::Surface(pl, pl==0?MAX_INFLUENCE:map.Influence(i, j));
             if (DrawBorder)
             {
-                glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
+                glLineWidth(drawer->Zoom*0.04f);
+                if (pl)
+                {
+                    QColor pc = PlayerColors::Color(pl);
+                    glColor4f(pc.redF(), pc.greenF(), pc.blueF(), 0.6f);
+                }
+                else
+                    glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
                 glCallList(Hex::Border());
             }
             if (map.Influence(i,j))
@@ -116,6 +123,13 @@ void MapDrawer::Draw(Drawer *drawer)
 
 }
 
+void MapDrawer::Explode(Drawer *drawer, int x, int y)
+{
+    QPointF r = GetCoord(x, y);
+    Particle *p = new Particle(132, r.x(), r.y(), 0.2f, PlayerColors::Color(map.Player(x, y)), 0.6f);
+    drawer->Add(p);
+}
+
 void MapDrawer::Click(Drawer *drawer, float x, float y)
 {
     QPoint t = GetCell(x, y);
@@ -123,9 +137,7 @@ void MapDrawer::Click(Drawer *drawer, float x, float y)
         return;
     if (!map.Player(t.x(), t.y()))
         return;
-    QPointF r = GetCoord(t.x(), t.y());
-    Particle *p = new Particle(132, r.x(), r.y(), 0.2f, PlayerColors::Color(map.Player(t.x(), t.y())), 0.6f);
-    drawer->Add(p);
+    Explode(drawer, t.x(), t.y());
 }
 
 QPointF MapDrawer::GetCoord(int x, int y)
