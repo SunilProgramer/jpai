@@ -133,7 +133,6 @@ begin
   begin
     s2[i] := 0;
     s1[i] := 0;
-//    inc(s1[i], sc[i]);
     sc[i] := 0;
   end;
   s := 0;

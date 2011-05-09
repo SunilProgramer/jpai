@@ -3,6 +3,7 @@
 #include "settingsmanager.h"
 #include "definition.h"
 #include "particlesystem.h"
+#include "playercolor.h"
 #include <algorithm>
 
 Map::Map() : field(), width(0), height(0), MaxPlayersCount(0), Window(0), SequenceLength(0)
@@ -73,7 +74,7 @@ void MapDrawer::CalculateBBox()
 {
     Drawer::Drawable::CalculateBBox();
     BB.setWidth((map.Width() + 0.5f)*Hex::Width());
-    BB.setHeight((map.Height() + 1.0f/3.0f)*3.0f*Hex::Height()/4.0f);
+    BB.setHeight((map.Height() + 1.0f/3.0f)*0.75f*Hex::Height());
 }
 
 void MapDrawer::SetMap(const Map &m)
@@ -117,7 +118,29 @@ void MapDrawer::Draw(Drawer *drawer)
 
 void MapDrawer::Click(Drawer *drawer, float x, float y)
 {
-    qDebug("1");
-    Particle *p = new Particle(300, x, y, 0.2f, QColor(rand()%256, rand()%256, rand()%256,255), 0.2f);
+    QPoint t = GetCell(x, y);
+    if (t.x() < 0 || t.y() < 0 || t.x() >= map.Width() || t.y() >= map.Height())
+        return;
+    if (!map.Player(t.x(), t.y()))
+        return;
+    QPointF r = GetCoord(t.x(), t.y());
+    Particle *p = new Particle(132, r.x(), r.y(), 0.2f, PlayerColors::Color(map.Player(t.x(), t.y())), 0.6f);
     drawer->Add(p);
+}
+
+QPointF MapDrawer::GetCoord(int x, int y)
+{
+    float rx = (x + (1 + y%2)*0.5f)*Hex::Width(), ry = y*0.75*Hex::Height() + Hex::Height()*0.5f;
+    return QPointF::QPointF(rx, ry);
+}
+
+QPoint MapDrawer::GetCell(float x, float y)
+{
+    y /= 0.75f*Hex::Height(); // add cool implementation
+    int yy = y;
+    x -= 0.5f*(yy%2);
+    x /= Hex::Width();
+    int xx = x;
+    return QPoint::QPoint(xx, yy);
+
 }
