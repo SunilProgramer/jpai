@@ -4,7 +4,7 @@
 #include <QtOpenGL>
 #include <QGLWidget>
 #include <QList>
-#include <QMutex>
+#include <QMutex> // maybe get rid of this
 
 class Drawer : public QGLWidget
 {

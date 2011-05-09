@@ -34,6 +34,8 @@ public:
     void SetMap(const Map &m);
     Map &GetMap();
 protected:
+    QPointF GetCoord(int x, int y);
+    QPoint GetCell(float x, float y);
     Map map;
     void CalculateBBox();
     void Draw(Drawer *drawer);

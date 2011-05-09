@@ -329,8 +329,9 @@ begin
     c.Polygon(pts, 8);
   end;
 
-  Handler.map.Field[x,y];
   c.MoveTo(xo + cellsize div 2, yo);
+  c.Pen.Color := PLAYER_COLORS[Handler.map.Color[x, y]];
+  c.Pen.Width := max(tbScale.Position div 25, 2);
   for i := 1 to 7 do
   begin
     x1 := round(xo + cellsize/2 + (radius/2)*cos(i*pi/3 + pi/6));
