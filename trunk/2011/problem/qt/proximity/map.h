@@ -40,6 +40,7 @@ protected:
     void CalculateBBox();
     void Draw(Drawer *drawer);
     void Click(Drawer *drawer, float x, float y);
+    void Explode(Drawer *drawer, int x, int y);
     GLuint surface, border;
 };
 
