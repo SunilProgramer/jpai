@@ -8,8 +8,8 @@
 class DirectoryWatcher : public QFileSystemWatcher
 {
 public:
-    DirectoryWatcher(const QString &directory);
-    DirectoryWatcher(const QDir &directory);
+    DirectoryWatcher(const QString &directory, QObject *parent = 0);
+    DirectoryWatcher(const QDir &directory, QObject *parent = 0);
     QString getDirectory();
 protected:
     QString Directory;
@@ -19,9 +19,9 @@ class DatabaseDirectoryWatcher : public QObject
 {
     Q_OBJECT
 public:
-    //DatabaseDirectoryWatcher(QString s = "0"){}
+    DatabaseDirectoryWatcher(QObject *parent = 0);
     ~DatabaseDirectoryWatcher();
-    QList<DirectoryWatcher*> Watchers;
+    QList<QFileSystemWatcher*> Watchers;
     QList<QDir> Directories;
     QStringList Tables;
     void AddWatcher(const QString &Table, const QDir &directory);

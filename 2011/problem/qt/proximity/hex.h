@@ -3,6 +3,7 @@
 
 #include <QtOpenGL>
 #include <GL/gl.h>
+#include <QLineF>
 #include "game.h"
 
 const int Quality = 4;
@@ -17,6 +18,7 @@ public:
     static void CleanUp();
     static float Width();
     static float Height();
+    static QLineF Line(int index);
 private:
     static void vtx(int ind, float x, float y, float z);
     static float vertices_array[(Quality*6 + 2)*3];

@@ -1,4 +1,6 @@
 #include "particlesystem.h"
+#include "settingsmanager.h"
+#include "definition.h"
 
 ParticleSystem::ParticleSystem()
 {
@@ -22,14 +24,19 @@ void Particle::Update(Drawer *drawer)
 void Particle::Draw(Drawer *drawer)
 {
     float r = s*drawer->Zoom;
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    bool flag = SettingsManager::Instance()->getValue(GRAPHICS_SETTINGS, COOL_PARTICLES, true).toBool();
+    if (flag)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glColor4f(Color.redF(), Color.greenF(), Color.blueF(), Color.alphaF()*sqrt(1.0f-(float)Life/TotalLifeTime));
     glBegin(GL_TRIANGLE_FAN);
     glVertex3f(x, y, -0.5f);
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i <= 16; i++)
     {
-        glColor4f(Color.redF(), Color.greenF(), Color.blueF(), 0.0f);
-        glVertex3f(x + s*cos(3.1415f*i/12.0f), y + s*sin(3.1415f*i/12.0f), -0.5f);
+        if (flag)
+            glColor4f(0.0f, 0.0f, 0.0f, 0.0f);// second
+        else
+            glColor4f(Color.redF(), Color.greenF(), Color.blueF(), 0.0f);// first
+        glVertex3f(x + s*cos(3.1415f*i/8.0f), y + s*sin(3.1415f*i/8.0f), -0.5f);
     }
     glEnd();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

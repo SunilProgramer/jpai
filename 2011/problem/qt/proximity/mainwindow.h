@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include "definition.h"
 #include "drawer.h"
-#include "map.h"
+#include "mapdrawer.h"
+#include "aihandler.h"
 #include "initmanager.h"
 
 namespace Ui {
@@ -22,7 +23,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Drawer *d;
-    Map map;
+    MapHandler map;
     InitManager im;
 };
 
