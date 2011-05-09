@@ -18,5 +18,6 @@ const QString GRAPHICS_SETTINGS = "graphics_settings";
 
 //Graphics
 const QString DRAW_BORDER = "draw_border";
+const QString COOL_PARTICLES = "cool_particles";
 
 #endif // DEFINITION_H

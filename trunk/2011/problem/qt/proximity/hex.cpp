@@ -140,3 +140,9 @@ void Hex::GenerateSurface()
     for (float i = step; i <= 1.0f; i += step)
         vtx(j++, blend(-HexConst[0], 0.0f, i), blend(-HexConst[1], -HexConst[2], i), 0.0f);
 }
+
+QLineF Hex::Line(int index)
+{
+    return QLineF(vertices_array[index*Quality*3 + 3], vertices_array[index*Quality*3 + 4],
+                  vertices_array[(index+1)*Quality*3 + 3], vertices_array[(index+1)*Quality*3 + 4]);
+}

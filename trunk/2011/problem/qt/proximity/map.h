@@ -1,11 +1,13 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "drawer.h"
 //#include "utils.h"
+#include <QObject>
+#include <QVector>
 
-class Map
+class Map : public QObject
 {
+    Q_OBJECT
 public:
     struct Cell
     {
@@ -14,34 +16,24 @@ public:
     };
     Map();
     ~Map();
-    void Load(const QString &filename);
+    bool Load(const QString &filename);
     void Export(const QString &filename);
-    Cell operator() (const int &x, const int &y);
+    Cell &Cells (const int &x, const int &y);
     int Player(const int &x, const int &y);
     int Influence(const int &x, const int &y);
+    void setPlayer(const int &x, const int &y, const int &Player);
+    void setInfluence(const int &x, const int &y, const int &Influence);
     int Width();
     int Height();
+signals:
+    void Loaded();
+    void Update();
 protected:
+    bool Valid(const int &x, const int &y);
     QVector<Cell> field; // **field <>
     QVector<QVector<short> > sequences;
-    int width, height, MaxPlayersCount, Window, SequenceLength;
+    int width, height, MaxPlayersCount, SequenceOutLength, SequenceLength;
 };
 
-class MapDrawer : public Drawer::Drawable
-{
-public:
-    MapDrawer(bool createdDynamically = true);
-    void SetMap(const Map &m);
-    Map &GetMap();
-protected:
-    QPointF GetCoord(int x, int y);
-    QPoint GetCell(float x, float y);
-    Map map;
-    void CalculateBBox();
-    void Draw(Drawer *drawer);
-    void Click(Drawer *drawer, float x, float y);
-    void Explode(Drawer *drawer, int x, int y);
-    GLuint surface, border;
-};
 
 #endif // MAP_H

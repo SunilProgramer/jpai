@@ -15,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     d = new Drawer(this);
     map.Load("./maps/test.map");
     MapDrawer *m = d->Add<MapDrawer>();
-    m->SetMap(map);
+    m->SetMap(&map);
 
     //DirectoryWatcher dd();
-    DatabaseDirectoryWatcher dd;
+    DatabaseDirectoryWatcher dd(this);
     dd.AddWatcher(DIRECTORY_MAPS, (*DirectoryManager::Instance())(DIRECTORY_MAPS));
 
     d->show();

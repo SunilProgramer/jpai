@@ -35,14 +35,14 @@ float normex(float f)
 
 QColor GetColor(const int &ind)
 {
-    int i = (ind)%24 - 7, s = 3;
+    int i = (ind)%25 - 7 - (ind > 24), s = 3;
     while (i >= 0)
     {
         s *= 2;
         i -= s;
     }
     while (i < 0) i+= s;
-    return QColor::fromHsvF(normex(1 - (float)(i%s + ((ind)%24 > 3)*0.5f)/(float)s), 1.0f*(ind!=0), 1.0f/pow(2, (ind!=24)*ind/24)/*/(pow(2, (ind>10)*ind/10.0f))*/, 1.0f);//
+    return QColor::fromHsvF(normex(1 - (float)(i%s + ((ind)%25 > 3)*0.5f)/(float)s), 1.0f*(ind!=0), 1.0f/pow(2, (ind>=24)*ind/24)/*/(pow(2, (ind>10)*ind/10.0f))*/, 1.0f);//
 }
 
 QColor PlayerColors::Color(const int &index)

@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     initmanager.cpp \
     databasemanager.cpp \
     particlesystem.cpp \
-    directorywatcher.cpp
+    directorywatcher.cpp \
+    mapdrawer.cpp
 HEADERS += mainwindow.h \
     definition.h \
     game.h \
@@ -29,12 +30,13 @@ HEADERS += mainwindow.h \
     executor.h \
     directorymanager.h \
     settingsmanager.h \
-    map.h \
     hex.h \
     utils.h \
     playercolor.h \
     initmanager.h \
     databasemanager.h \
     particlesystem.h \
-    directorywatcher.h
+    directorywatcher.h \
+    map.h \
+    mapdrawer.h
 FORMS += mainwindow.ui
