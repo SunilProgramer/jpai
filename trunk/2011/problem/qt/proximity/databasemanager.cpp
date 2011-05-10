@@ -1,9 +1,24 @@
 #include "databasemanager.h"
+#include "QSqlField"
 
 DatabaseManager *DatabaseManager::instance = 0;
 
-DatabaseManager::DatabaseManager()
+DatabaseManager::DatabaseManager() : db(QSqlDatabase::addDatabase("QSQLITE"))
 {
+    db.setDatabaseName("proximity");
+    if (!db.open())
+    {
+        qDebug("!");
+
+//        QMessageBox::critical(0, qApp->tr("Cannot open database"),
+//            qApp->tr("Unable to establish a database connection.\n"
+//                     "This example needs SQLite support. Please read "
+//                     "the Qt SQL driver documentation for information how "
+//                     "to build it.\n\n"
+//                     "Click Cancel to exit."), QMessageBox::Cancel);
+//        return false;
+    }
+    q = QSqlQuery::QSqlQuery(db);
 }
 
 DatabaseManager::~DatabaseManager()
@@ -22,5 +37,18 @@ void DatabaseManager::Cleanup()
 {
     if (instance)
         delete instance;
+}
+
+bool DatabaseManager::exec(const QString &str)
+{
+    return q.exec(str);
+}
+
+QString DatabaseManager::EscapeString(const QString &val)//, const QVariant::Type &type)
+{
+    QSqlField field("u", QVariant::String);
+    QSqlDriver d;
+    field.setValue(val);
+    return d.formatValue(field);
 }
 

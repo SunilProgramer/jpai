@@ -8,7 +8,7 @@ class DirectoryManager
 public:
     static DirectoryManager *Instance();
     static void Cleanup();
-    QDir operator()(const QString &name);
+    QDir Directory(const QString &name);
 
 private:
     DirectoryManager();

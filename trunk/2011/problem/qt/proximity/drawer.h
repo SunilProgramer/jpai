@@ -42,9 +42,11 @@ public slots:
 protected:
     QMutex mutex;
     QList<Drawable*> objects;
+    QList<Drawable*> to_add;
     void resizeGL(int w, int h);
     void initializeGL();
     void paintGL();
+    void AddUnadded();
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

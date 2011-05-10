@@ -3,7 +3,8 @@
 # -------------------------------------------------
 QT += core \
     gui \
-    opengl
+    opengl \
+    sql
 TARGET = proximity
 TEMPLATE = app
 SOURCES += main.cpp \
