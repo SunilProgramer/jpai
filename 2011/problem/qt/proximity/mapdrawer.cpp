@@ -62,7 +62,11 @@ void MapDrawer::Draw(Drawer *drawer)
         }
         glPopMatrix();
     }
-
+    while (!map->changed.isEmpty())
+    {
+        Explode(drawer, map->changed.front().x(), map->changed.front().y());
+        map->changed.pop_front();
+    }
 }
 
 void MapDrawer::Explode(Drawer *drawer, int x, int y)
@@ -78,13 +82,14 @@ void MapDrawer::Click(Drawer *drawer, float x, float y)
     if (t.x() == -1 || t.y() == -1)
         return;
     map->Step(t.x(), t.y());
+
+    if (!map->Player(t.x(), t.y()))
+        return;
     while (!map->changed.isEmpty())
     {
         Explode(drawer, map->changed.front().x(), map->changed.front().y());
         map->changed.pop_front();
     }
-    if (!map->Player(t.x(), t.y()))
-        return;
 }
 
 QPointF MapDrawer::GetCoord(int x, int y)

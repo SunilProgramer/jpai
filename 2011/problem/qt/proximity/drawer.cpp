@@ -25,9 +25,14 @@ Drawer::Drawer(QWidget *parent) :
 
 Drawer::~Drawer()
 {
-    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
-        if ((*i)->CreatedDynamically)
-            delete (*i);
+    mutex.lock();
+    while (!objects.isEmpty())
+    {
+        if (objects.front()->CreatedDynamically)
+            delete objects.front();
+        objects.pop_front();
+    }
+    mutex.unlock();
 }
 
 void Drawer::DrawText(float x, float y, int font_size, QString s)
@@ -45,7 +50,13 @@ void Drawer::DrawText(float x, float y, int font_size, QString s)
 
 void Drawer::Add(Drawable *obj)
 {
+    if (!mutex.tryLock())
+    {
+        to_add.append(obj);
+        return;
+    }
     objects.append(obj);
+    mutex.unlock();
 }
 
 Drawer::Drawable *Drawer::Get(const int &ind)
@@ -85,6 +96,7 @@ void Drawer::resizeGL(int w, int h)
         r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
     }
     mutex.unlock();
+    AddUnadded();
     Zoom = min(width()/r.width(), height()/r.height());
     ox = r.left();
     oy = r.top();
@@ -126,6 +138,7 @@ void Drawer::paintGL()
     for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
         (*i)->Draw(this);
     mutex.unlock();
+    AddUnadded();
 }
 
 void Drawer::mousePressEvent(QMouseEvent *event)
@@ -187,6 +200,7 @@ void Drawer::mouseReleaseEvent(QMouseEvent *event)
             }
         }
         mutex.unlock();
+        AddUnadded();
         for (QList<Drawable*>::iterator i = clicked.begin(); i != clicked.end(); ++i)
         {
             (*i)->Click(this, event->x()/Zoom - ox, event->y()/Zoom - oy);
@@ -242,8 +256,20 @@ void Drawer::Update()
         }
     }
     mutex.unlock();
+    AddUnadded();
     if (upd)
         updateGL();
     QTimer::singleShot(33, this, SLOT(Update()));
+}
+
+void Drawer::AddUnadded()
+{
+    mutex.lock();
+    while (!to_add.isEmpty())
+    {
+        objects.push_back(to_add.front());
+        to_add.pop_front();
+    }
+    mutex.unlock();
 }
 

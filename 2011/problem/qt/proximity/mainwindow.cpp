@@ -18,8 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m->SetMap(&map);
 
     //DirectoryWatcher dd();
-    DatabaseDirectoryWatcher dd(this);
-    dd.AddWatcher(DIRECTORY_MAPS, (*DirectoryManager::Instance())(DIRECTORY_MAPS));
+    //DatabaseDirectoryWatcher dd(this);
+    //dd.AddWatcher(DIRECTORY_MAPS, (*DirectoryManager::Instance())(DIRECTORY_MAPS));
 
     d->show();
     ui->glDraw->addWidget(d);
@@ -27,9 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    DirectoryManager::Cleanup();
-    SettingsManager::Cleanup();
-    Hex::CleanUp();
     delete d;
     delete ui;
 }

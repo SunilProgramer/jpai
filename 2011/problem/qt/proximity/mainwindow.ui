@@ -19,13 +19,13 @@
      <widget class="QGroupBox" name="gbGame">
       <property name="minimumSize">
        <size>
-        <width>170</width>
+        <width>190</width>
         <height>100</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>170</width>
+        <width>190</width>
         <height>16777215</height>
        </size>
       </property>
@@ -40,16 +40,16 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0" colspan="3">
-        <widget class="QPushButton" name="pbNew">
+        <widget class="QPushButton" name="pbMatch">
          <property name="text">
-          <string>Новая</string>
+          <string>Матч</string>
          </property>
         </widget>
        </item>
        <item row="0" column="3" colspan="4">
-        <widget class="QPushButton" name="pbMatch">
+        <widget class="QPushButton" name="pbCompetition">
          <property name="text">
-          <string>Матч</string>
+          <string>Соревнование</string>
          </property>
         </widget>
        </item>
@@ -106,6 +106,9 @@
          <property name="text">
           <string>Начните новую игру</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
       </layout>
@@ -121,7 +124,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>170</width>
+        <width>190</width>
         <height>16777215</height>
        </size>
       </property>
@@ -138,7 +141,7 @@
      <x>0</x>
      <y>0</y>
      <width>727</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
