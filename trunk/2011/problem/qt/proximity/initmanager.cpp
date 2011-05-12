@@ -36,6 +36,13 @@ InitManager::InitManager()
     }
     query.exec("create table player_competition_matches (id integer primary key autoincrement, "
                     "competition_players_id integer references competition_players(id), match_id integer references matches(id))");
+    query.exec("create table player_scores (id integer primary key autoincrement, "
+                    "player_competition_matches_id integer references player_competition_matches(id), scores integer default 0)");
+    query.exec("create table player_moves (id integer primary key autoincrement, "
+                    "player_competition_matches_id integer references player_competition_matches(id), step integer default 0,"
+                    "player integer default 1, influence integer default 0, current_step integer default 0,"
+                    "x integer default 0, y integer default 0)");
+    qDebug(query.lastError().text().toAscii());
 }
 
 InitManager::~InitManager()

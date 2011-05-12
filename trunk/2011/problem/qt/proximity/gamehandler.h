@@ -22,6 +22,9 @@ public:
     MapHandler *getMapHandler();
     AIHandler *getAIHandler();
     void ApplyMatch(MatchDialog *dialog);
+    bool NotStarted();
+    void SilentStep();
+    int GetMatchId();
 public slots:
     void Init();
     void StepFwd();

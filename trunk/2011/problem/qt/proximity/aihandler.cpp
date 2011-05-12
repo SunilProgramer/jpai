@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
+#include <QSqlQuery>
+#include <QVariant>
 
 AIHandler::AIHandler()
 {
@@ -45,6 +47,8 @@ void AIHandler::run()
                 }
             }
         }
+        Handler->CalculateScores();
+        emit StepFinished();
         mutex.lock();
         if (Stopped)
         {
@@ -95,16 +99,18 @@ QString AIHandler::GetOutput(const QString &filename)
 
 void MapHandler::onLoad()
 {
+    lock();
     defaultField.resize(width*height);
     for (int i = 0; i < width*height; i++)
     {
         defaultField[i].influence = field[i].influence;
         defaultField[i].player = field[i].player;
-        defaultFreecells += field[i].player==0;
     }
     CurrentStep = 0;
     CurrentPlayer = 1;
-    freecells = defaultFreecells;
+    defaultFreecells = freecells = width*height;
+    stepped = 0;
+    unlock();
     //mb rezoom -> signal update
     //reset scores, currentplayer etc
 }
@@ -139,6 +145,7 @@ void MapHandler::Step(int x, int y)
     lock();
     setPlayer(x, y, CurrentPlayer);
     freecells--;
+    stepped++;
     setInfluence(x, y, sequences[CurrentPlayer - 1][CurrentStep%SequenceLength]);
     changed.push_back(QPoint(x, y));
     int influ = Influence(x, y);
@@ -148,17 +155,44 @@ void MapHandler::Step(int x, int y)
     Check(x + y%2, y - 1, influ);
     Check(x - 1 + y%2, y + 1, influ);
     Check(x + y%2, y + 1, influ);
+    /*QSqlQuery query;
+    query.prepare("insert into player_moves (player_competition_matches_id, player, influence, step, current_step, x, y)"
+                  "values (:player_competition_matches_id, :player, :influence, :step, :current_step, :x, :y)");
+    query.bindValue(":player_competition_matches_id", QVariant(GetPlayerId(CurrentPlayer - 1)));
+    query.bindValue(":player", CurrentPlayer);
+    query.bindValue(":influence", Influence(x, y));
+    query.bindValue(":step", QVariant(stepped));
+    query.bindValue(":current_step", QVariant(CurrentStep));
+    query.bindValue(":x", QVariant(x));
+    query.bindValue(":y", QVariant(y));
+    query.exec();*/
     CurrentStep += CurrentPlayer==(Players.size());
     CurrentPlayer = CurrentPlayer%Players.size() + 1;
     unlock();
     emit Update();
     //calculate scores somehow
 }
+void MapHandler::silentStep(int x, int y, int Player, int influence)
+{
+    setPlayer(x, y, Player);
+    freecells--;
+    stepped++;
+    setInfluence(x, y, influence);
+    changed.push_back(QPoint(x, y));
+    int influ = Influence(x, y);
+    Check(x - 1, y, influence);
+    Check(x + 1, y, influence);
+    Check(x - 1 + y%2, y - 1, influence);
+    Check(x + y%2, y - 1, influence);
+    Check(x - 1 + y%2, y + 1, influence);
+    Check(x + y%2, y + 1, influence);
+    CurrentPlayer = 1;
+}
 
-void MapHandler::Check(int x, int y, int influ)
+int MapHandler::Check(int x, int y, int influ)
 {
     if (!Valid(x, y))
-        return;
+        return 0;
     if (Player(x, y) == CurrentPlayer && Influence(x, y) != MAX_INFLUENCE)
     {
         setInfluence(x, y, Influence(x, y) + 1);
@@ -168,7 +202,9 @@ void MapHandler::Check(int x, int y, int influ)
     {
         setPlayer(x, y, CurrentPlayer);
         changed.push_back(QPoint(x, y));
+        return 1;
     }
+    return 0;
 }
 
 void MapHandler::Reset()
@@ -181,10 +217,12 @@ void MapHandler::Reset()
     CurrentStep = 0;
     CurrentPlayer = 1;
     freecells = defaultFreecells;
+    stepped = 0;
     //mb rezoom -> signal update
     //reset scores, currentplayer etc
 
     emit Update();
+    emit Reseted();
 }
 
 void MapHandler::ClearPlayers()
@@ -192,6 +230,7 @@ void MapHandler::ClearPlayers()
     Players.clear();
     PlayersId.clear();
     PlayersIdentitiy.clear();
+    scores.clear();
     Reset();
 }
 
@@ -200,6 +239,7 @@ void MapHandler::AddPlayer(const QString &name, const int &id, bool Player)
     Players.push_back(name);
     PlayersId.push_back(id);
     PlayersIdentitiy.push_back(Player);
+    scores.push_back(0);
     emit Update();
 }
 
@@ -217,10 +257,24 @@ int MapHandler::GetPlayerId(const int &index)
 {
     return PlayersId[std::max(std::min(index, Players.size()), 0)];
 }
+int MapHandler::GetPlayerNum(const int &id)
+{
+    return PlayersId.indexOf(id) + 1;
+}
 
 int MapHandler::PlayersCount()
 {
     return Players.size();
+}
+
+int MapHandler::Stepped()
+{
+    return stepped;
+}
+void MapHandler::SetCurrentStep(int step)
+{
+    CurrentStep = step;
+    emit Update();
 }
 
 void MapHandler::Export(const QString &filename)
@@ -254,4 +308,30 @@ void MapHandler::Step(const QString &command)
     }
     QStringList l = r.capturedTexts();
     Step(l[1].toInt() - 1, l[2].toInt() - 1);
+}
+void MapHandler::CalculateScores()
+{
+    lock();
+    for (int i = 0; i < scores.size(); i++)
+        scores[i] = 0;
+    for (int i = 0; i < width*height; i++)
+        if (field[i].player != 0)
+            scores[field[i].player - 1]++;
+    QSqlQuery query;
+    for (int i = 0; i < PlayersCount(); i++)
+    {
+        query.prepare("select id from player_scores where player_competition_matches_id = :player_id");
+        query.bindValue(":player_id", GetPlayerId(i));
+        query.exec();
+        query.first();
+        if (query.isValid())
+            query.prepare("update player_scores set scores = :scores where player_competition_matches_id = :player_id");
+        else
+            query.prepare("insert into player_scores (scores, player_competition_matches_id) values(:scores, :player_id)");
+        query.bindValue(":scores", scores[i]);
+        query.bindValue(":player_id", GetPlayerId(i));
+        query.exec();
+    }
+    unlock();
+    //submit it to db
 }
