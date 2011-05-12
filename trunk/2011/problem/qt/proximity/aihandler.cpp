@@ -20,30 +20,29 @@ void AIHandler::run()
         {
             if (!Handler->FreeCells())
             {
-                mutex.unlock();
-                //signal finished
-                emit Finished();
-                quit();
-                return;
+                Stop();
             }
-            QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_RUN);
-            Executor e(MAX_RUNNING_TIME);
-            if (!Handler->GetPlayerIdentity(i))
+            else
             {
-                d.mkdir("Player" + QString::number(i));
-                d.cd("Player" + QString::number(i));
-                QStringList l = d.entryList(QDir::Files);
-                while (!l.isEmpty())
+                QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_RUN);
+                Executor e(MAX_RUNNING_TIME);
+                if (!Handler->GetPlayerIdentity(i))
                 {
-                    if (l.front() != TEMP_FILE)
-                        d.remove(l.front());
-                    l.pop_front();
+                    d.mkdir("Player" + QString::number(i));
+                    d.cd("Player" + QString::number(i));
+                    QStringList l = d.entryList(QDir::Files);
+                    while (!l.isEmpty())
+                    {
+                        if (l.front() != TEMP_FILE)
+                            d.remove(l.front());
+                        l.pop_front();
+                    }
+                    Handler->Export(d.filePath(INPUT_FILE));
+                    e.run(d.absolutePath(), DirectoryManager::Instance()->Directory(DIRECTORY_AIS).filePath(Handler->GetPlayer(i)));
+                    Handler->Step(GetOutput(d.filePath(OUTPUT_FILE)));
+                    //process output
+                    d.cdUp();
                 }
-                Handler->Export(d.filePath(INPUT_FILE));
-                e.run(d.absolutePath(), DirectoryManager::Instance()->Directory(DIRECTORY_AIS).filePath(Handler->GetPlayer(i)));
-                Handler->Step(GetOutput(d.filePath(OUTPUT_FILE)));
-                //process output
-                d.cdUp();
             }
         }
         mutex.lock();
