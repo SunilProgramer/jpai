@@ -18,13 +18,17 @@ public:
     static GameHandler *Instance();
     static void Cleanup();
     int CompetitionId();
+    int MatchId();
     MapHandler *getMapHandler();
+    AIHandler *getAIHandler();
     void ApplyMatch(MatchDialog *dialog);
 public slots:
+    void Init();
     void StepFwd();
     void Start(bool start);
 
 protected:
+    void LoadMatchFromDb();
     AIHandler Handler;
     int match_id;
     GameHandler();

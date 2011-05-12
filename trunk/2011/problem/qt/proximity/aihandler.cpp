@@ -49,6 +49,7 @@ void AIHandler::run()
         if (Stopped)
         {
             mutex.unlock();
+            emit Finished();
             quit();
             return;
         }
@@ -64,7 +65,7 @@ void AIHandler::Start()
     Stopped = false;
     mutex.unlock();
     if (!isRunning())
-        start();
+        start(QThread::HighestPriority);
 }
 
 void AIHandler::Stop()
@@ -210,6 +211,11 @@ QString MapHandler::GetPlayer(const int &index)
 bool MapHandler::GetPlayerIdentity(const int &index)
 {
     return PlayersIdentitiy[std::max(std::min(index, Players.size()), 0)];
+}
+
+int MapHandler::GetPlayerId(const int &index)
+{
+    return PlayersId[std::max(std::min(index, Players.size()), 0)];
 }
 
 int MapHandler::PlayersCount()

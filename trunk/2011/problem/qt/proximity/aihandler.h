@@ -21,6 +21,7 @@ public:
     void Export(const QString &filename);
     QString GetPlayer(const int &index);
     bool GetPlayerIdentity(const int &index);
+    int GetPlayerId(const int &index);
     int PlayersCount();
     int FreeCells();
 public slots:

@@ -3,9 +3,11 @@
 #include "directorymanager.h"
 #include "definition.h"
 #include "aiselect.h"
-#include "gamehandler.h"
+#include <QSqlQuery>
 
-MatchDialog::MatchDialog(QWidget *parent): QDialog(parent, Qt::Dialog)
+
+MatchDialog::MatchDialog(QWidget *parent, const int &competitionid, const int &match_id): QDialog(parent, Qt::Dialog),
+    CompetitionId(competitionid), MatchId(match_id)
 {
     if (objectName().isEmpty())
         setObjectName(QString::fromUtf8("MatchDialog"));
@@ -19,6 +21,11 @@ MatchDialog::MatchDialog(QWidget *parent): QDialog(parent, Qt::Dialog)
 
     cbMaps = new QComboBox(this);
     cbMaps->setObjectName(QString::fromUtf8("cbMaps"));
+    QSqlQuery query;
+    query.prepare("select map_name from matches where match_id = :match_id");
+    query.bindValue(":match_id", MatchId);
+    query.exec();
+    query.first();
 
     QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_MAPS);
     QStringList l = d.entryList(QStringList(QString("*.map")), QDir::Files);
@@ -27,6 +34,10 @@ MatchDialog::MatchDialog(QWidget *parent): QDialog(parent, Qt::Dialog)
         QVector<int> v = Map::Preprocess(d.filePath(l.front()));
         //QString s = l.front() + ;
         cbMaps->addItem(QString("%1 %2x%3").arg(l.front()).arg(v[0]).arg(v[1]), l.front());
+        if (l.front() == query.value(0))
+        {
+            cbMaps->setCurrentIndex(cbMaps->count() - 1);
+        }
         l.pop_front();
     }
 
@@ -54,7 +65,13 @@ MatchDialog::MatchDialog(QWidget *parent): QDialog(parent, Qt::Dialog)
     lwAis->setObjectName(QString::fromUtf8("lwAis"));
     lwAis->setSelectionMode(QAbstractItemView::MultiSelection);
     lwAis->setDragDropMode(QAbstractItemView::InternalMove);
-    // select from table
+
+    query.prepare("select cp.id, cp.player_name, cp.player from competition_players as cp "
+                  "inner join player_competition_matches as pcm on cp.id = pcm.competition_players_id where pcm.match_id = :match_id");
+    query.bindValue(":match_id", MatchId);
+    query.exec();
+    while (query.next())
+        lwAis->addItem(QString("%1:%2 %3").arg(query.value(0).toInt()).arg(query.value(1).toString()).arg(query.value(2).toBool()?"Human":"Comp"));
 
     gridLayout->addWidget(lwAis, 2, 1, 1, 2);
 
@@ -81,7 +98,7 @@ MatchDialog::MatchDialog(QWidget *parent): QDialog(parent, Qt::Dialog)
 void MatchDialog::AddAi()
 {
     AiSelect *aiselect = new AiSelect(this);
-    QVector<QString> ais = aiselect->execute(true, GameHandler::Instance()->CompetitionId());
+    QVector<QString> ais = aiselect->execute(true, CompetitionId);
     while (!ais.empty())
     {
         lwAis->addItem(ais.front());

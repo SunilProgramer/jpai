@@ -13,8 +13,7 @@ MapDrawer::MapDrawer(bool createdDynamically): QObject(), Drawer::Drawable::Draw
 void MapDrawer::CalculateBBox()
 {
     Drawer::Drawable::CalculateBBox();
-    BB.setWidth((map->Width() + 0.5f)*Hex::Width());
-    BB.setHeight((map->Height() + 1.0f/3.0f)*0.75f*Hex::Height());
+    BB.setSize(QSizeF((map->Width() + 0.5f)*Hex::Width(), (map->Height() + 1.0f/3.0f)*0.75f*Hex::Height()));
 }
 
 void MapDrawer::SetMap(MapHandler *m)
