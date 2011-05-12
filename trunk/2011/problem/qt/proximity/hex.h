@@ -6,7 +6,7 @@
 #include <QLineF>
 #include "game.h"
 
-const int Quality = 4;
+const int Quality = 2;
 
 class Hex
 {

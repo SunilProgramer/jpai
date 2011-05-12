@@ -22,7 +22,10 @@ SOURCES += main.cpp \
     databasemanager.cpp \
     particlesystem.cpp \
     directorywatcher.cpp \
-    mapdrawer.cpp
+    mapdrawer.cpp \
+    matchdialog.cpp \
+    aiselect.cpp \
+    gamehandler.cpp
 HEADERS += mainwindow.h \
     definition.h \
     game.h \
@@ -39,5 +42,10 @@ HEADERS += mainwindow.h \
     particlesystem.h \
     directorywatcher.h \
     map.h \
-    mapdrawer.h
-FORMS += mainwindow.ui
+    mapdrawer.h \
+    matchdialog.h \
+    aiselect.h \
+    gamehandler.h
+FORMS += mainwindow.ui \
+    matchdialog.ui \
+    aiselect.ui

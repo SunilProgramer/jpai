@@ -31,6 +31,12 @@ QVariant SettingsManager::getValue(const QString &group, const QString &key, con
     endGroup();
     return val;
 }
+void SettingsManager::SetValue(const QString &group, const QString &key, const QVariant &Value)
+{
+    beginGroup(group);
+    setValue(key, Value);
+    endGroup();
+}
 
 SettingsManager::SettingsManager(): QSettings(SectionName, ProjectName)
 {

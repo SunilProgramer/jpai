@@ -10,7 +10,6 @@ public:
     static DatabaseManager *Instance();
     static void Cleanup();
     bool exec(const QString &str);
-    QString EscapeString(const QString &val);
 private:
     QSqlDatabase db;
     QSqlQuery q;
