@@ -20,10 +20,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void EditMatch();
+
 private:
     Ui::MainWindow *ui;
     Drawer *d;
-    MapHandler map;
+//    MapHandler map;
     InitManager im;
 };
 

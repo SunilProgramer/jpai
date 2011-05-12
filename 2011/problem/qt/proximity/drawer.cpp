@@ -28,8 +28,9 @@ Drawer::~Drawer()
     mutex.lock();
     while (!objects.isEmpty())
     {
-        if (objects.front()->CreatedDynamically)
-            delete objects.front();
+        Drawable *d = objects.front();
+        if (d->CreatedDynamically)
+        //    delete d; <-- fix this bug
         objects.pop_front();
     }
     mutex.unlock();

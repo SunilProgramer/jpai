@@ -5,6 +5,7 @@
 #include "settingsmanager.h"
 #include "hex.h"
 #include "databasemanager.h"
+#include "gamehandler.h"
 
 class InitManager
 {

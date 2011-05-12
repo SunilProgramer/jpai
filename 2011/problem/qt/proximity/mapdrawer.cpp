@@ -26,6 +26,7 @@ void MapDrawer::SetMap(MapHandler *m)
 
 void MapDrawer::Draw(Drawer *drawer)
 {
+    map->lock();
     bool DrawBorder = SettingsManager::Instance()->getValue(GRAPHICS_SETTINGS, DRAW_BORDER, true).toBool();
     glLineWidth(5);
     int sy = std::max((-drawer->oy - 1)*4.0f/(Hex::Height()*3.0f), 0.0f),
@@ -67,18 +68,19 @@ void MapDrawer::Draw(Drawer *drawer)
         Explode(drawer, map->changed.front().x(), map->changed.front().y());
         map->changed.pop_front();
     }
+    map->unlock();
 }
 
 void MapDrawer::Explode(Drawer *drawer, int x, int y)
 {
     QPointF r = GetCoord(x, y);
-    Particle *p = new Particle(300, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.2f);
+    Particle *p = new Particle(150, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.4f);
     drawer->Add(p);
 }
 
 void MapDrawer::Click(Drawer *drawer, float x, float y)
 {
-    QPoint t = GetCell(x, y);
+/*    QPoint t = GetCell(x, y);
     if (t.x() == -1 || t.y() == -1)
         return;
     map->Step(t.x(), t.y());
@@ -89,7 +91,7 @@ void MapDrawer::Click(Drawer *drawer, float x, float y)
     {
         Explode(drawer, map->changed.front().x(), map->changed.front().y());
         map->changed.pop_front();
-    }
+    }*/
 }
 
 QPointF MapDrawer::GetCoord(int x, int y)

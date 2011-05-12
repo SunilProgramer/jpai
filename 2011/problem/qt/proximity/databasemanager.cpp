@@ -5,7 +5,7 @@ DatabaseManager *DatabaseManager::instance = 0;
 
 DatabaseManager::DatabaseManager() : db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    db.setDatabaseName("proximity");
+    db.setDatabaseName("proximity.db");
     if (!db.open())
     {
         qDebug("!");
@@ -44,11 +44,4 @@ bool DatabaseManager::exec(const QString &str)
     return q.exec(str);
 }
 
-QString DatabaseManager::EscapeString(const QString &val)//, const QVariant::Type &type)
-{
-    QSqlField field("u", QVariant::String);
-    QSqlDriver d;
-    field.setValue(val);
-    return d.formatValue(field);
-}
 
