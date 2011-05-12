@@ -19,6 +19,7 @@ public:
     static float Width();
     static float Height();
     static QLineF Line(int index);
+    static void DrawCaption(int influence);
 private:
     static void vtx(int ind, float x, float y, float z);
     static float vertices_array[(Quality*6 + 2)*3];
@@ -30,7 +31,7 @@ private:
     static GLuint surface;
     static GLuint surface_cover;
     static bool border_generated;
-    static GLuint GenerateSurface();
+    static GLuint GenerateSurface(int influence);
     static GLuint GenerateBorder();
 };
 

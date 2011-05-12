@@ -122,7 +122,7 @@ void MapHandler::Step(int x, int y)
     if (!Valid(x, y))
     {
         qDebug("0!");
-        CurrentStep++;
+        CurrentStep += CurrentPlayer==(Players.size());
         CurrentPlayer = CurrentPlayer%Players.size() + 1;
         emit Update();
         return;
@@ -130,7 +130,7 @@ void MapHandler::Step(int x, int y)
     if (Player(x, y) != 0)
     {
         qDebug("1!");
-        CurrentStep++;
+        CurrentStep += CurrentPlayer==(Players.size());
         CurrentPlayer = CurrentPlayer%Players.size() + 1;
         emit Update();
         return;
@@ -138,7 +138,7 @@ void MapHandler::Step(int x, int y)
     lock();
     setPlayer(x, y, CurrentPlayer);
     freecells--;
-    setInfluence(x, y, sequences[CurrentPlayer][CurrentStep%SequenceLength]);
+    setInfluence(x, y, sequences[CurrentPlayer - 1][CurrentStep%SequenceLength]);
     changed.push_back(QPoint(x, y));
     int influ = Influence(x, y);
     Check(x - 1, y, influ);
@@ -147,7 +147,7 @@ void MapHandler::Step(int x, int y)
     Check(x + y%2, y - 1, influ);
     Check(x - 1 + y%2, y + 1, influ);
     Check(x + y%2, y + 1, influ);
-    CurrentStep++;
+    CurrentStep += CurrentPlayer==(Players.size());
     CurrentPlayer = CurrentPlayer%Players.size() + 1;
     unlock();
     emit Update();

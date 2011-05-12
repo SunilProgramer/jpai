@@ -30,12 +30,12 @@ void MapDrawer::Draw(Drawer *drawer)
     bool DrawBorder = SettingsManager::Instance()->getValue(GRAPHICS_SETTINGS, DRAW_BORDER, true).toBool();
     glLineWidth(5);
     int sy = std::max((-drawer->oy - 1)*4.0f/(Hex::Height()*3.0f), 0.0f),
-        my = std::min((int)((-drawer->oy + 1 + (float)drawer->height()/drawer->Zoom)*4.0f/(Hex::Height()*3.0f)) + 1, map->Height());
+        my = std::min((int)((-drawer->oy + 1 + (float)drawer->height()/drawer->Zoom)*4.0f/(Hex::Height()*3.0f)) + 1, map->Height()),
+        mx = std::min((int)((-drawer->ox + (float)drawer->width()/drawer->Zoom)/Hex::Width()) + 1, map->Width());
     for (int j = sy; j < my; j++) // very bad
     {
         glPushMatrix();
-        int sx = std::max((-drawer->ox)/Hex::Width() - j%2, 0.0f),
-            mx = std::min((int)((-drawer->ox + (float)drawer->width()/drawer->Zoom)/Hex::Width()) + 1, map->Width());//get valuse by coordinate -> hex.h
+        int sx = std::max((-drawer->ox)/Hex::Width() - j%2, 0.0f);//get valuse by coordinate -> hex.h
         glTranslatef((0.5f*(1 + j%2) + sx)*Hex::Width(), j*0.75f*Hex::Height() + Hex::Height()*0.5f, 0.0f);// mb replace with appropriate procedures like GetOffset & others
         for (int i = sx; i < mx; i++)
         {
@@ -54,13 +54,28 @@ void MapDrawer::Draw(Drawer *drawer)
                     glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
                 glCallList(Hex::Border());
             }
-            if (map->Influence(i,j))
-            {
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                //drawer->DrawText((i + (1 + j%2)*0.5f)*Hex::Width(), j*Hex::Height()*0.75f, 0, QString::number(map->Influence(i, j)));
-            }
+            //if (map->Influence(i,j))
+            //{
+            //    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            //    drawer->DrawText((i + (1 + j%2)*0.5f)*Hex::Width(), j*Hex::Height()*0.75f, 0, QString::number(map->Influence(i, j)));
+            //}
             glTranslatef(Hex::Width(), 0.0f, 0.0f);
         }
+        glPopMatrix();
+    }
+    for (int j = sy; j < my; j++) // very bad
+    {
+        glPushMatrix();
+        int sx = std::max((-drawer->ox)/Hex::Width() - j%2, 0.0f);//get valuse by coordinate -> hex.h
+        glTranslatef((0.5f*(1 + j%2) + sx)*Hex::Width(), j*0.75f*Hex::Height() + Hex::Height()*0.5f, 0.0f);// mb replace with appropriate procedures like GetOffset & others
+        for (int i = sx; i < mx; i++)
+        {
+            if (map->Influence(i,j))
+            {
+                Hex::DrawCaption(map->Influence(i, j));
+            }
+            glTranslatef(Hex::Width(), 0.0f, 0.0f);
+         }
         glPopMatrix();
     }
     while (!map->changed.isEmpty())
@@ -74,7 +89,7 @@ void MapDrawer::Draw(Drawer *drawer)
 void MapDrawer::Explode(Drawer *drawer, int x, int y)
 {
     QPointF r = GetCoord(x, y);
-    Particle *p = new Particle(165, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.4f);
+    Particle *p = new Particle(150, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.4f);
     drawer->Add(p);
 }
 
