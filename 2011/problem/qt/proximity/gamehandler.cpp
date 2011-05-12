@@ -59,6 +59,38 @@ void GameHandler::LoadMatchFromDb()
         m.AddPlayer(query.value(1).toString(), query.value(0).toInt(), query.value(2).toBool());
     }
 }
+bool GameHandler::NotStarted()
+{
+    QSqlQuery query;
+    query.prepare("select count() from player_moves where step >= :step");
+    query.bindValue(":step", m.Stepped());
+    query.exec();
+    query.first();
+    return query.value(0).toInt();
+}
+
+void GameHandler::SilentStep()
+{
+    QSqlQuery query;
+    query.prepare("select min(current_step) from player_moves as ps inner_join player_competition_matches as pcm where step > :step, pcm.match_id = :match_id");
+    query.bindValue(":step", m.Stepped());
+    query.bindValue(":match_id", match_id);
+    query.exec();
+    query.first();
+    int cs = query.value(0).toInt();
+    query.prepare("select pcm.id, x, y, player, influence from player_moves as ps"
+                  "inner join player_competition_matches as pcm on pcm.id = player_competition_matches_id "
+                  "where step >= :step and pcm.match_id = :match_id and current_step = :current_step");
+    query.bindValue(":step", m.Stepped());
+    query.bindValue(":current_step", cs);
+    query.bindValue(":match_id", match_id);
+    query.exec();
+    while (query.next())
+    {
+        m.silentStep(query.value(1).toInt(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt());
+    }
+    m.SetCurrentStep(cs);
+}
 
 GameHandler *GameHandler::Instance()
 {
@@ -74,6 +106,11 @@ void GameHandler::Cleanup()
 }
 void GameHandler::StepFwd()
 {
+    //protect match_id ?!
+   // if (NotStarted())
+    //{
+    //    SilentStep();
+    //}
     Handler.Start();
     Handler.Stop();
 }
@@ -84,6 +121,10 @@ void GameHandler::Start(bool start)
         Handler.Start();
     else
         Handler.Stop();
+}
+int GameHandler::GetMatchId()
+{
+    return match_id;
 }
 
 int GameHandler::CompetitionId()

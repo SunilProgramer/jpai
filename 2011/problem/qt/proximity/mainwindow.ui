@@ -33,7 +33,7 @@
        <string>Игра</string>
       </property>
       <property name="flat">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -117,8 +117,11 @@
       </layout>
      </widget>
     </item>
+    <item row="0" column="2" rowspan="2">
+     <layout class="QGridLayout" name="glDraw"/>
+    </item>
     <item row="1" column="3">
-     <widget class="QTableView" name="tableView">
+     <widget class="QTableView" name="tvScores">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -127,14 +130,11 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>190</width>
+        <width>210</width>
         <height>16777215</height>
        </size>
       </property>
      </widget>
-    </item>
-    <item row="0" column="2" rowspan="2">
-     <layout class="QGridLayout" name="glDraw"/>
     </item>
    </layout>
   </widget>
