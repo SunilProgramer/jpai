@@ -58,7 +58,10 @@
    <item row="2" column="1" colspan="2">
     <widget class="QListView" name="listView">
      <property name="dragEnabled">
-      <bool>true</bool>
+      <bool>false</bool>
+     </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::InternalMove</enum>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::MultiSelection</enum>

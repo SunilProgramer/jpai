@@ -27,8 +27,10 @@ private:
     static bool surface_generated;
     static bool color_generated;
     static GLuint border;
+    static GLuint surface;
+    static GLuint surface_cover;
     static bool border_generated;
-    static void GenerateSurface();
+    static GLuint GenerateSurface();
     static GLuint GenerateBorder();
 };
 
