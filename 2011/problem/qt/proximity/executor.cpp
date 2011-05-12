@@ -11,6 +11,6 @@ int Executor::run(const QString &RunDir, const QString &Executable)
     start(Executable);
     if (!waitForFinished(RunTime))
         close();
-    qDebug("%d", exitStatus());
+    //qDebug("%d", exitStatus());
     return exitCode();
 }

@@ -103,7 +103,7 @@ void Drawer::ResetZoom()
         r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
     }
     mutex.unlock();
-    qDebug("%d", width());
+    //qDebug("%d", width());
     Zoom = min(width()/r.width(), height()/r.height());
     ox = r.left();
     oy = r.top();

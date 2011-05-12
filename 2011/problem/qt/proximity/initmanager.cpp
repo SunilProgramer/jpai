@@ -11,7 +11,7 @@ InitManager::InitManager()
                     "name text)"))
     {
         QSqlError e = query.lastError();
-        qDebug(e.text().toAscii());
+        //qDebug(e.text().toAscii());
     }
     query.exec("create table matches (id integer primary key autoincrement, "
                     "competition_id integer references competition(id), map_name text, started boolean default false, finished boolean default false)");

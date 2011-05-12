@@ -8,7 +8,7 @@ DatabaseManager::DatabaseManager() : db(QSqlDatabase::addDatabase("QSQLITE"))
     db.setDatabaseName("proximity.db");
     if (!db.open())
     {
-        qDebug("!");
+        //qDebug("!");
 
 //        QMessageBox::critical(0, qApp->tr("Cannot open database"),
 //            qApp->tr("Unable to establish a database connection.\n"
