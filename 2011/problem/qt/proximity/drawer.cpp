@@ -20,6 +20,7 @@ Drawer::Drawer(QWidget *parent) :
     oy = 0; // remove this stuff
     DragStarted = false;
     QTimer::singleShot(33, this, SLOT(Update()));
+
 }
 
 Drawer::~Drawer()
@@ -106,7 +107,7 @@ void Drawer::resizeGL(int w, int h)
 
 void Drawer::initializeGL()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+    glClearColor(0.0f, 0.0f, 0.0f, .5f);
     glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -130,6 +131,7 @@ void Drawer::paintGL()
         sy = p.y();
     }
     QRect r(ox*Zoom, oy*Zoom, width(), height());
+//    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glScalef(Zoom, Zoom, 1.0f);
@@ -235,17 +237,6 @@ void Drawer::Update()
 {
     bool upd = false;
     mutex.lock();
-    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
-    {
-        if (!(*i)->Updated)
-        {
-            upd = true;
-            (*i)->Updated = true;
-            (*i)->Update(this);
-        }
-    }
-    mutex.unlock();
-    mutex.lock();
     QList<Drawable*>::iterator j = objects.begin();
     while (j != objects.end())
     {
@@ -256,6 +247,15 @@ void Drawer::Update()
             j = objects.erase(j);
         }
         else j++;
+    }
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+    {
+        if (!(*i)->Updated)
+        {
+            upd = true;
+            (*i)->Updated = true;
+            (*i)->Update(this);
+        }
     }
     mutex.unlock();
     AddUnadded();
