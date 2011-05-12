@@ -8,7 +8,7 @@ class MatchDialog : public QDialog
 {
     Q_OBJECT
 public:
-    MatchDialog(QWidget *parent);
+    MatchDialog(QWidget *parent, const int &competitionid, const int &match_id);
     QGridLayout *gridLayout;
     QLabel *lMap;
     QComboBox *cbMaps;
@@ -17,6 +17,9 @@ public:
     QPushButton *pushButton_2;
     QListWidget *lwAis;
     QDialogButtonBox *buttonBox;
+protected:
+    int CompetitionId;
+    int MatchId;
 public slots:
     void AddAi();
     void RemoveAi();

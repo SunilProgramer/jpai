@@ -39,6 +39,7 @@ public:
     bool DragStarted;
 public slots:
     void Update();
+    void ResetZoom();
 protected:
     QMutex mutex;
     QList<Drawable*> objects;

@@ -12,7 +12,7 @@ void Drawer::Drawable::CalculateBBox()
 }
 
 Drawer::Drawer(QWidget *parent) :
-    QGLWidget(parent)
+    QGLWidget(parent), Zoom(1.0f)
 {
     MapWidth = 100;
     MapHeight = 100;
@@ -89,6 +89,12 @@ void Drawer::resizeGL(int w, int h)
 
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Drawer::ResetZoom()
+{
     QRectF r;
     mutex.lock();
     for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
@@ -97,12 +103,11 @@ void Drawer::resizeGL(int w, int h)
         r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
     }
     mutex.unlock();
-    AddUnadded();
+    qDebug("%d", width());
     Zoom = min(width()/r.width(), height()/r.height());
     ox = r.left();
     oy = r.top();
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    updateGL();
 }
 
 void Drawer::initializeGL()
@@ -210,20 +215,7 @@ void Drawer::mouseReleaseEvent(QMouseEvent *event)
 
     }
     if (event->button() == Qt::MidButton) // Reset zoom
-    {
-        QRectF r;
-        mutex.lock();
-        for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
-        {
-            (*i)->CalculateBBox();
-            r = (i == objects.begin())?(*i)->BB:r.unite((*i)->BB);
-        }
-        mutex.unlock();
-        Zoom = min(width()/r.width(), height()/r.height());
-        ox = r.left();
-        oy = r.top();
-        updateGL();
-    }
+        ResetZoom();
     if (event->button() != Qt::RightButton || !DragStarted)
         return;
     DragStarted = false;

@@ -22,7 +22,9 @@ public:
 
 public slots:
     void EditMatch();
-
+    void Stop();
+protected:
+    void showEvent(QShowEvent *event);
 private:
     Ui::MainWindow *ui;
     Drawer *d;
