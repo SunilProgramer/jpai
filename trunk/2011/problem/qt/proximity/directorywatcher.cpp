@@ -42,7 +42,7 @@ void DatabaseDirectoryWatcher::AddWatcher(const QString &Table, const QDir &dire
 
 void DatabaseDirectoryWatcher::DirectoryChanged(const QString &directory)
 {
-    qDebug("1");
+    //qDebug("1");
     for (int i = 0; i < Watchers.size(); i++)
         if (Directories[i] == directory)
             UpdateDatabase(Tables[i], Directories[i]);

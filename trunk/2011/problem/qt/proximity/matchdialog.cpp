@@ -22,24 +22,26 @@ MatchDialog::MatchDialog(QWidget *parent, const int &competitionid, const int &m
     cbMaps = new QComboBox(this);
     cbMaps->setObjectName(QString::fromUtf8("cbMaps"));
     QSqlQuery query;
-    query.prepare("select map_name from matches where match_id = :match_id");
+    query.prepare("select map_name from matches where id = :match_id");
     query.bindValue(":match_id", MatchId);
     query.exec();
     query.first();
 
     QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_MAPS);
     QStringList l = d.entryList(QStringList(QString("*.map")), QDir::Files);
+    int ind = 0;
     while (!l.isEmpty())
     {
         QVector<int> v = Map::Preprocess(d.filePath(l.front()));
         //QString s = l.front() + ;
         cbMaps->addItem(QString("%1 %2x%3").arg(l.front()).arg(v[0]).arg(v[1]), l.front());
-        if (l.front() == query.value(0))
+        if (l.front() == query.value(0).toString())
         {
-            cbMaps->setCurrentIndex(cbMaps->count() - 1);
+            ind = cbMaps->count() - 1;
         }
         l.pop_front();
     }
+    cbMaps->setCurrentIndex(ind);
 
 
     gridLayout->addWidget(cbMaps, 0, 1, 1, 2);

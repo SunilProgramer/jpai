@@ -14,9 +14,11 @@ Particle::Particle(int LifeTime, float _x, float _y, float _s, QColor color, flo
 
 void Particle::Update(Drawer *drawer)
 {
+    //qDebug("%d %d", Life, TotalLifeTime);
     Life += 33;
-    if (Life >= TotalLifeTime)
+    if (Life > TotalLifeTime)
         Deleted = true;
+    Life = std::min(Life,TotalLifeTime);
     x += dx; y += dy; s += ds;
     Updated = false;
 }

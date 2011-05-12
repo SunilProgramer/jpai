@@ -122,7 +122,7 @@ void MapHandler::Step(int x, int y)
 {
     if (!Valid(x, y))
     {
-        qDebug("0!");
+        //qDebug("0!");
         CurrentStep += CurrentPlayer==(Players.size());
         CurrentPlayer = CurrentPlayer%Players.size() + 1;
         emit Update();
@@ -130,7 +130,7 @@ void MapHandler::Step(int x, int y)
     }
     if (Player(x, y) != 0)
     {
-        qDebug("1!");
+        //qDebug("1!");
         CurrentStep += CurrentPlayer==(Players.size());
         CurrentPlayer = CurrentPlayer%Players.size() + 1;
         emit Update();

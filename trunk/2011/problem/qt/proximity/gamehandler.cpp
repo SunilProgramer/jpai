@@ -47,7 +47,7 @@ void GameHandler::LoadMatchFromDb()
     query.bindValue(":id", match_id);
     query.exec();
     query.first();
-    qDebug(query.lastError().text().toAscii());
+    //qDebug(query.lastError().text().toAscii());
     m.Load(DirectoryManager::Instance()->Directory(DIRECTORY_MAPS).filePath(query.value(2).toString()));
     m.ClearPlayers();
     query.prepare("select pcm.id, cp.player_name, cp.player from competition_players as cp "
@@ -127,7 +127,7 @@ void GameHandler::ApplyMatch(MatchDialog *dialog)
         if (!q.exec())
         {
             QSqlError e = q.lastError();
-            qDebug(e.text().toAscii());
+            //qDebug(e.text().toAscii());
         }
         q.exec("select last_insert_rowid()");
         q.first();
