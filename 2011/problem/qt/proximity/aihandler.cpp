@@ -294,7 +294,7 @@ void MapHandler::Export(const QString &filename)
     {
         if (i%width == 0)
             stream << "\n";
-        stream << field[i].player << " " << field[i].influence << " ";
+        stream << (field[i].player?((field[i].player - CurrentPlayer + PlayersCount())%PlayersCount() + 1):field[i].player) << " " << field[i].influence << " ";
     }
 }
 
