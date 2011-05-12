@@ -20,7 +20,6 @@ Drawer::Drawer(QWidget *parent) :
     oy = 0; // remove this stuff
     DragStarted = false;
     QTimer::singleShot(33, this, SLOT(Update()));
-
 }
 
 Drawer::~Drawer()
@@ -236,6 +235,17 @@ void Drawer::Update()
 {
     bool upd = false;
     mutex.lock();
+    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
+    {
+        if (!(*i)->Updated)
+        {
+            upd = true;
+            (*i)->Updated = true;
+            (*i)->Update(this);
+        }
+    }
+    mutex.unlock();
+    mutex.lock();
     QList<Drawable*>::iterator j = objects.begin();
     while (j != objects.end())
     {
@@ -246,15 +256,6 @@ void Drawer::Update()
             j = objects.erase(j);
         }
         else j++;
-    }
-    for (QList<Drawable*>::iterator i = objects.begin(); i != objects.end(); ++i)
-    {
-        if (!(*i)->Updated)
-        {
-            upd = true;
-            (*i)->Updated = true;
-            (*i)->Update(this);
-        }
     }
     mutex.unlock();
     AddUnadded();

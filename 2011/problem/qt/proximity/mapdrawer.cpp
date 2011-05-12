@@ -57,7 +57,7 @@ void MapDrawer::Draw(Drawer *drawer)
             if (map->Influence(i,j))
             {
                 glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                drawer->DrawText((i + (1 + j%2)*0.5f)*Hex::Width(), j*Hex::Height()*0.75f, 0, QString::number(map->Influence(i, j)));
+                //drawer->DrawText((i + (1 + j%2)*0.5f)*Hex::Width(), j*Hex::Height()*0.75f, 0, QString::number(map->Influence(i, j)));
             }
             glTranslatef(Hex::Width(), 0.0f, 0.0f);
         }
@@ -74,7 +74,7 @@ void MapDrawer::Draw(Drawer *drawer)
 void MapDrawer::Explode(Drawer *drawer, int x, int y)
 {
     QPointF r = GetCoord(x, y);
-    Particle *p = new Particle(150, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.4f);
+    Particle *p = new Particle(165, r.x(), r.y(), 0.6f, PlayerColors::Color(map->Player(x, y)), 0.4f);
     drawer->Add(p);
 }
 

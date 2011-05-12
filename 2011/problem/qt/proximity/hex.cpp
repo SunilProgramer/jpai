@@ -42,8 +42,8 @@ QColor Hex::GetColor(int Player, int influence)
 
 void Hex::Surface(int player, int influence)
 {
-    QColor c = GetColor(player, influence);
-    QPair<int, int> p = qMakePair(player, influence);
+    QColor c = GetColor(player, (int)floor(influence/2)*2);
+    QPair<int, int> p = qMakePair(player, (int)floor(influence/2)*2);
     qreal cl[4];
     cl[0] = c.redF();
     cl[1] = c.greenF();
