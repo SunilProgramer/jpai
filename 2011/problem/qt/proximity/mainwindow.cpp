@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer = new ScoresViewer(this);
     MapDrawer *m = d->Add<MapDrawer>();
     m->SetMap(GameHandler::Instance()->getMapHandler());
+    menu = new QMenu(this);
+    actions = new QActionGroup(menu);
+    ui->pbCompetition->setMenu(menu);
 
     //DirectoryWatcher dd();
     //DatabaseDirectoryWatcher dd(this);
@@ -97,7 +100,7 @@ void MainWindow::ChangeMap()
     query.bindValue(":match_id", GameHandler::Instance()->GetMatchId());
     query.exec();
     query.first();
-    ui->lMap->setText(QString("%1:%2 %3").arg(GameHandler::Instance()->MatchId()).arg(compname).arg(query.value(0).toString()));
+    ui->lMap->setText(QString("%1.%2: %3").arg(GameHandler::Instance()->MatchId()).arg(compname).arg(query.value(0).toString()));
 }
 
 MainWindow::~MainWindow()
@@ -113,7 +116,42 @@ void MainWindow::Stop()
 void MainWindow::showEvent(QShowEvent *event)
 {
     GameHandler::Instance()->Init();
+    QSqlQuery query("select * from competitions");
+    query.exec();
+    QAction *a = menu->addAction("<New competition>");
+    connect(a, SIGNAL(triggered()), this, SLOT(on_pbCompetition_clicked()));
+    //menu->addSeparator();
+    a = menu->addAction("<Default>");
+    CompIds.push_back(0);
+    a->setToolTip(QString::number(0));;
+    a->setCheckable(true);
+    actions->addAction(a);
+    if (0 == GameHandler::Instance()->CompetitionId())
+        a->setChecked(true);
+    connect(a, SIGNAL(toggled(bool)), this, SLOT(acceptCompetition(bool)));
+    menu->addSeparator();
+    while (query.next())
+    {
+        a = menu->addAction(query.value(1).toString());
+        a->setCheckable(true);
+        actions->addAction(a);
+        if (query.value(0).toInt() == GameHandler::Instance()->CompetitionId())
+            a->setChecked(true);
+        connect(a, SIGNAL(toggled(bool)), this, SLOT(acceptCompetition(bool)));
+        CompIds.push_back(query.value(0).toInt());
+        a->setToolTip(QString::number(query.value(0).toInt()));;
+    }
     UpdateScores();
+}
+
+void MainWindow::acceptCompetition(bool toggled)
+{
+    if (toggled)
+    {
+        QAction *a = static_cast<QAction*>(QObject::sender());
+        SettingsManager::Instance()->SetValue(GAME, COMPETITION_ID, a->toolTip().toInt());
+        GameHandler::Instance()->Init();
+    }
 }
 
 void MainWindow::EditMatch()
@@ -130,6 +168,11 @@ void MainWindow::on_pbCompetition_clicked()
     CompetitionDialog *d = new CompetitionDialog(this);
     if (d->exec())
     {
+        QAction *a = menu->addAction(d->Name());
+        a->setCheckable(true);
+        actions->addAction(a);
+        a->setChecked(true);
+        connect(a, SIGNAL(toggled(bool)), this, SLOT(acceptCompetition(bool)));
         //adding competition
         //simple but yet effective
         QSqlQuery query;
@@ -140,6 +183,8 @@ void MainWindow::on_pbCompetition_clicked()
         query.exec("select last_insert_rowid()");
         query.first();
         int id = query.value(0).toInt();
+        CompIds.push_back(id);
+        a->setToolTip(QString::number(id));;
         SettingsManager::Instance()->SetValue(GAME, COMPETITION_ID, id);
         for (int i = 0; i < d->PlayersCount(); i++)
         {

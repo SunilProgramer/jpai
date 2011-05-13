@@ -37,11 +37,15 @@ public slots:
     void Stop();
     void UpdateScores();
     void ChangeMap();
+    void acceptCompetition(bool toggled);
 protected:
     void showEvent(QShowEvent *event);
 private:
     Ui::MainWindow *ui;
     Drawer *d;
+    QMenu *menu;
+    QActionGroup *actions;
+    QVector<int> CompIds;
     ScoresViewer *viewer;
 //    MapHandler map;
     InitManager im;
