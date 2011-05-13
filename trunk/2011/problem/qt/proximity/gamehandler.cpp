@@ -20,14 +20,14 @@ void GameHandler::Init()
     int cid = CompetitionId();
     QSqlQuery q;
     q.setForwardOnly(true);
-    QString s = "select * from matches where competition_id ";
     if (cid)
-        s += "= :competition_id";
+    {
+        q.prepare("select * from matches where competition_id = :competition_id");
+        q.bindValue(":competition_id", cid);
+        q.exec();
+    }
     else
-        s += " is NULL";
-    q.prepare(s);
-    q.bindValue(":competition_id", cid);
-    q.exec();
+        q.exec("select * from matches where competition_id is NULL");
     q.first();
     qDebug(q.lastError().text().toAscii());
     if (!q.isValid())
