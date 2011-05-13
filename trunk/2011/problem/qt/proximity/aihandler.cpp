@@ -106,18 +106,6 @@ void MapHandler::onLoad()
         defaultField[i].influence = field[i].influence;
         defaultField[i].player = field[i].player;
     }
-    QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_RUN);
-    for (int i = 0; i < PlayersCount(); i++)
-    {
-        d.cd("Player" + QString::number(i));
-        QStringList l = d.entryList(QDir::Files);
-        while (!l.isEmpty())
-        {
-            d.remove(l.front());
-            l.pop_front();
-        }
-        d.cdUp();
-    }
     CurrentStep = 0;
     CurrentPlayer = 1;
     defaultFreecells = freecells = width*height;
@@ -226,18 +214,6 @@ void MapHandler::Reset()
         field[i].influence = defaultField[i].influence;
         field[i].player = defaultField[i].player;
     }
-    QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_RUN);
-    for (int i = 0; i < PlayersCount(); i++)
-    {
-        d.cd("Player" + QString::number(i));
-        QStringList l = d.entryList(QDir::Files);
-        while (!l.isEmpty())
-        {
-            d.remove(l.front());
-            l.pop_front();
-        }
-        d.cdUp();
-    }
     CurrentStep = 0;
     CurrentPlayer = 1;
     freecells = defaultFreecells;
@@ -285,6 +261,10 @@ int MapHandler::GetPlayerNum(const int &id)
 {
     return PlayersId.indexOf(id) + 1;
 }
+int MapHandler::Sequence(const int &player_id, const int &id)
+{
+    return sequences[player_id%PlayersCount()][(CurrentStep + id)%SequenceLength];
+}
 
 int MapHandler::PlayersCount()
 {
@@ -324,7 +304,7 @@ void MapHandler::Export(const QString &filename)
 
 void MapHandler::Step(const QString &command)
 {
-    QRegExp r("^(-?\\d+)\\s+(-?\\d+).*");
+    QRegExp r("^(-?\\d+)\\s+(-?\\d+)");
     if (!r.exactMatch(command))
     {
         Step(-1, -1);

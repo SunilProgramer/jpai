@@ -28,6 +28,7 @@ public:
     void silentStep(int x, int y, int Player, int influence);
     void SetCurrentStep(int step);
     void CalculateScores();
+    int Sequence(const int &player_id, const int &id);
 signals:
     void Reseted();
 public slots:

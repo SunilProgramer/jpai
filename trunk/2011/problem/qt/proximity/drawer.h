@@ -17,6 +17,7 @@ public:
         virtual void Draw(Drawer *drawer) = 0;
         virtual void Update(Drawer *drawer);
         virtual void Click(Drawer *drawer, float x, float y);
+        QRectF GetBB();
     protected:
         friend class Drawer;
         virtual void CalculateBBox();
