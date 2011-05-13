@@ -28,6 +28,8 @@ public:
 public slots:
     void Init();
     void StepFwd();
+    void NextMatch();
+    void PrevMatch();
     void Start(bool start);
 
 protected:

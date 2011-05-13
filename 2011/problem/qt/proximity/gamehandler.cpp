@@ -25,10 +25,12 @@ void GameHandler::Init()
         s += "= :competition_id";
     else
         s += " is NULL";
-    q.bindValue(":competition_id", cid);
     q.prepare(s);
+    q.bindValue(":competition_id", cid);
     q.exec();
-    if (!q.first())
+    q.first();
+    qDebug(q.lastError().text().toAscii());
+    if (!q.isValid())
     {
         SettingsManager::Instance()->SetValue(GAME, MATCH_ID, int(0)); // next task
         match_id = 0;
@@ -113,6 +115,36 @@ void GameHandler::StepFwd()
     //}
     Handler.Start();
     Handler.Stop();
+}
+
+void GameHandler::NextMatch()
+{
+    QSqlQuery query;
+    query.prepare("select id from matches where id > :match_id and competition_id = :competition_id");
+    query.bindValue(":match_id", match_id);
+    query.bindValue(":competition_id", CompetitionId());
+    query.exec();
+    query.first();
+    if (query.isValid())
+    {
+        match_id = query.value(0).toInt();
+        LoadMatchFromDb();
+    }
+}
+
+void GameHandler::PrevMatch()
+{
+    QSqlQuery query;
+    query.prepare("select id from matches where id < :match_id and competition_id = :competition_id order by id desc");
+    query.bindValue(":match_id", match_id);
+    query.bindValue(":competition_id", CompetitionId());
+    query.exec();
+    query.first();
+    if (query.isValid())
+    {
+        match_id = query.value(0).toInt();
+        LoadMatchFromDb();
+    }
 }
 
 void GameHandler::Start(bool start)

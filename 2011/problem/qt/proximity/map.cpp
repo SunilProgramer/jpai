@@ -64,7 +64,7 @@ bool Map::Load(const QString &filename)
     }
 
     for (int i = 0; i < width*height; i++)
-        stream >> field[i].player >> field[i].influence;
+        field[i].player = field[i].influence = 0;
     unlock();
     emit Loaded();
     emit Update();

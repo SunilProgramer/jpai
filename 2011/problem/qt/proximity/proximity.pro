@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     mapdrawer.cpp \
     matchdialog.cpp \
     aiselect.cpp \
-    gamehandler.cpp
+    gamehandler.cpp \
+    competitiondialog.cpp
 HEADERS += mainwindow.h \
     definition.h \
     game.h \
@@ -45,7 +46,9 @@ HEADERS += mainwindow.h \
     mapdrawer.h \
     matchdialog.h \
     aiselect.h \
-    gamehandler.h
+    gamehandler.h \
+    competitiondialog.h
 FORMS += mainwindow.ui \
     matchdialog.ui \
-    aiselect.ui
+    aiselect.ui \
+    competitiondialog.ui
