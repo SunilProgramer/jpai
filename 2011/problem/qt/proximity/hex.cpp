@@ -162,7 +162,7 @@ float blend(float x, float y, float c)
 
 void Hex::vtx(int ind, float x, float y, float z)
 {
-    float r = sqrt(x*x + y*y)/0.5f;
+    float r = 0.25f + (sqrt(x*x + y*y)*2.0f)*0.75f;
     r = r>1.0f?1.0f:r;
     glColor4f(r*Hex::prev_color[0], r*Hex::prev_color[1], r*Hex::prev_color[2], 1.0f);
     glVertex3f(x, y, z);

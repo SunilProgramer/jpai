@@ -10,6 +10,11 @@ Drawer::Drawable::Drawable(bool createdDynamically): CreatedDynamically(createdD
 void Drawer::Drawable::CalculateBBox()
 {
 }
+QRectF Drawer::Drawable::GetBB()
+{
+    CalculateBBox();
+    return BB;
+}
 
 Drawer::Drawer(QWidget *parent) :
     QGLWidget(parent), Zoom(1.0f)

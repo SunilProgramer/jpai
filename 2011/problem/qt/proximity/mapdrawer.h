@@ -21,6 +21,7 @@ protected:
     void Click(Drawer *drawer, float x, float y);
     void Explode(Drawer *drawer, int x, int y);
     GLuint surface, border;
+    bool DisplayGraph;
 public slots:
     void onUpdate();
 };

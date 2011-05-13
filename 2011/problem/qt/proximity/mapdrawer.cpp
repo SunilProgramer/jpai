@@ -82,6 +82,31 @@ void MapDrawer::Draw(Drawer *drawer)
         Explode(drawer, map->changed.front().x(), map->changed.front().y());
         map->changed.pop_front();
     }
+    if (DisplayGraph)
+    {
+        glPushMatrix();
+        glLoadIdentity();
+        glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+        glBegin(GL_QUADS);
+        glVertex3f(10.0f, 10.0f, -0.8f);
+        glVertex3f(drawer->width() - 10, 10.0f, -0.8f);
+        glVertex3f(drawer->width() - 10, 110, -0.8f);
+        glVertex3f(10.0f, 110, -0.8f);
+        glEnd();
+        for (int i = 0; i < map->PlayersCount(); i++)
+        {
+            QColor c = PlayerColors::Color(i + 1);
+            glColor4f(c.redF(), c.greenF(), c.blueF(), 0.5f);
+            glLineWidth(3.0f);
+            glBegin(GL_LINE_STRIP);
+            for (int j = 0; j < (drawer->width()-20)*0.1f; j++)
+            {
+                glVertex3f(10.0f + j*20.0f, 110.0f - map->Sequence(i, j)*5.0f + 5.0f, -0.9f);
+            }
+            glEnd();
+        }
+        glPopMatrix();
+    }
     map->unlock();
 }
 
@@ -94,6 +119,8 @@ void MapDrawer::Explode(Drawer *drawer, int x, int y)
 
 void MapDrawer::Click(Drawer *drawer, float x, float y)
 {
+    DisplayGraph = !DisplayGraph;
+    Updated = false;
 /*    QPoint t = GetCell(x, y);
     if (t.x() == -1 || t.y() == -1)
         return;
