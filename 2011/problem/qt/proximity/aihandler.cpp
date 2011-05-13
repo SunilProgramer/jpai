@@ -300,7 +300,7 @@ void MapHandler::Export(const QString &filename)
 
 void MapHandler::Step(const QString &command)
 {
-    QRegExp r("^(-?\\d+)\\s+(-?\\d+)");
+    QRegExp r("^(-?\\d+)\\s+(-?\\d+).*");
     if (!r.exactMatch(command))
     {
         Step(-1, -1);
