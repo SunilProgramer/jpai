@@ -37,13 +37,26 @@ QVector<QString> AiSelect::execute(bool selectFromDb, const int &competition_id)
 {
     if (!selectFromDb)
     {
-        lwAis->addItem("<Player>");
-        QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_AIS);
-        QStringList l = d.entryList(QDir::Executable|QDir::Files);
-        while (!l.isEmpty())
+        if (competition_id == -1)
         {
-            lwAis->addItem(l.front());
-            l.pop_front();
+            QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_MAPS);
+            QStringList l = d.entryList(QStringList(QString("*.map")), QDir::Files);
+            while (!l.isEmpty())
+            {
+                lwAis->addItem(l.front());
+                l.pop_front();
+            }
+        }
+        else
+        {
+            lwAis->addItem("<Player>");
+            QDir d = DirectoryManager::Instance()->Directory(DIRECTORY_AIS);
+            QStringList l = d.entryList(QDir::Executable|QDir::Files);
+            while (!l.isEmpty())
+            {
+                lwAis->addItem(l.front());
+                l.pop_front();
+            }
         }
     }
     else

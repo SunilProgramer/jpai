@@ -36,6 +36,7 @@ public slots:
     void EditMatch();
     void Stop();
     void UpdateScores();
+    void ChangeMap();
 protected:
     void showEvent(QShowEvent *event);
 private:
@@ -44,6 +45,11 @@ private:
     ScoresViewer *viewer;
 //    MapHandler map;
     InitManager im;
+
+private slots:
+    void on_pbBkwd_clicked();
+    void on_pbFwd_clicked();
+    void on_pbCompetition_clicked();
 };
 
 #endif // MAINWINDOW_H

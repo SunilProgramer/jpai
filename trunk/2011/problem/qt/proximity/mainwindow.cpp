@@ -7,6 +7,7 @@
 #include "matchdialog.h"
 #include "gamehandler.h"
 #include "playercolor.h"
+#include "competitiondialog.h"
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -59,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(GameHandler::Instance()->getMapHandler(), SIGNAL(Loaded()), d, SLOT(ResetZoom()));
     //connect(GameHandler::Instance()->getMapHandler(), SIGNAL(Loaded()), this, SLOT(UpdateScores()));
     connect(GameHandler::Instance()->getMapHandler(), SIGNAL(Update()), this, SLOT(UpdateScores()));
+    connect(GameHandler::Instance()->getMapHandler(), SIGNAL(Loaded()), this, SLOT(ChangeMap()));
     connect(GameHandler::Instance()->getAIHandler(), SIGNAL(Finished()), this, SLOT(Stop()));
     connect(GameHandler::Instance()->getAIHandler(), SIGNAL(StepFinished()), this, SLOT(UpdateScores()));
 
@@ -81,6 +83,21 @@ void MainWindow::UpdateScores()
     viewer->setHeaderData(2, Qt::Horizontal, QObject::tr("Scores")); // to translate
     ui->tvScores->setModel(viewer);
     ui->tvScores->setColumnWidth(0, 24);
+}
+
+void MainWindow::ChangeMap()
+{
+    QSqlQuery query;
+    query.prepare("select name from competitions where id = :competition_id");
+    query.bindValue(":competition_id", GameHandler::Instance()->CompetitionId());
+    query.exec();
+    query.first();
+    QString compname = query.value(0).toString();
+    query.prepare("select map_name from matches where id = :match_id");
+    query.bindValue(":match_id", GameHandler::Instance()->GetMatchId());
+    query.exec();
+    query.first();
+    ui->lMap->setText(QString("%1:%2 %3").arg(GameHandler::Instance()->MatchId()).arg(compname).arg(query.value(0).toString()));
 }
 
 MainWindow::~MainWindow()
@@ -106,4 +123,92 @@ void MainWindow::EditMatch()
     //d->setWindowModality(Qt::WindowModal);
     if (d->exec())
         GameHandler::Instance()->ApplyMatch(d);
+}
+
+void MainWindow::on_pbCompetition_clicked()
+{
+    CompetitionDialog *d = new CompetitionDialog(this);
+    if (d->exec())
+    {
+        //adding competition
+        //simple but yet effective
+        QSqlQuery query;
+        QVector<int> players;
+        query.prepare("insert into competitions (name) values (:name)");
+        query.bindValue(":name", d->Name());
+        query.exec();
+        query.exec("select last_insert_rowid()");
+        query.first();
+        int id = query.value(0).toInt();
+        SettingsManager::Instance()->SetValue(GAME, COMPETITION_ID, id);
+        for (int i = 0; i < d->PlayersCount(); i++)
+        {
+            query.prepare("insert into competition_players (competition_id, player_name, player) values (:competition_id, :player_name, :player)");
+            query.bindValue(":competition_id", id);
+            query.bindValue(":player_name", d->Player(i));
+            query.bindValue(":player", bool(d->Player(i)=="<Player>"));
+            query.exec();
+            query.exec("select last_insert_rowid()");
+            query.first();
+            players.push_back(query.value(0).toInt());
+        }
+        int first_match = 0;
+        for (int i = 0; i < d->PlayersCount(); i++)
+        {
+            for (int j = i + 1; j < d->PlayersCount(); j++)
+            {
+                for (int k = 0; k < d->MapsCount(); k++)
+                {
+                    query.prepare("insert into matches (competition_id, map_name) values (:competition_id, :map_name)");
+                    query.bindValue(":competition_id", id);
+                    query.bindValue(":map_name", d->Map(k));
+                    query.exec();
+                    query.exec("select last_insert_rowid()");
+                    query.first();
+                    int match = query.value(0).toInt();
+                    if (!first_match)
+                        first_match = match;
+                    query.prepare("insert into player_competition_matches (competition_players_id, match_id) values (:competition_players_id, :match_id)");
+                    query.bindValue(":competition_players_id", players[i]);
+                    query.bindValue(":match_id", match);
+                    query.exec();
+                    query.prepare("insert into player_competition_matches (competition_players_id, match_id) values (:competition_players_id, :match_id)");
+                    query.bindValue(":competition_players_id", players[j]);
+                    query.bindValue(":match_id", match);
+                    query.exec();
+
+                    query.prepare("insert into matches (competition_id, map_name) values (:competition_id, :map_name)");
+                    query.bindValue(":competition_id", id);
+                    query.bindValue(":map_name", d->Map(k));
+                    query.exec();
+                    query.exec("select last_insert_rowid()");
+                    query.first();
+                    match = query.value(0).toInt();
+                    if (!first_match)
+                        first_match = match;
+                    query.prepare("insert into player_competition_matches (competition_players_id, match_id) values (:competition_players_id, :match_id)");
+                    query.bindValue(":competition_players_id", players[j]);
+                    query.bindValue(":match_id", match);
+                    query.exec();
+                    query.prepare("insert into player_competition_matches (competition_players_id, match_id) values (:competition_players_id, :match_id)");
+                    query.bindValue(":competition_players_id", players[i]);
+                    query.bindValue(":match_id", match);
+                    query.exec();
+                }
+            }
+        }
+        GameHandler::Instance()->Init();
+    }
+
+}
+
+void MainWindow::on_pbFwd_clicked()
+{
+    //next match
+    GameHandler::Instance()->NextMatch();
+}
+
+void MainWindow::on_pbBkwd_clicked()
+{
+    GameHandler::Instance()->PrevMatch();
 }
